@@ -1,0 +1,51 @@
+import { Avatar, IconButton, Stack, Typography , ListItem } from '@mui/material';
+import React,{memo} from 'react'
+import { Remove as RemoveIcon , Add as AddIcon } from '@mui/icons-material';
+import { transformImage } from '../../lib/features';
+const UserItem = ({ user, handler, handlerIsLoading, isAdded = false, styling = {} }) => {
+    const { name, avatar, _id } = user;
+  
+    return (
+      <ListItem>
+        <Stack
+          direction="row"
+          alignItems="center"
+          spacing="1rem"
+          width="100%"
+          sx={{ ...styling }}
+        >
+          <Avatar src={transformImage(avatar.url)} />
+          <Typography
+            sx={{
+              flexGrow: 1,
+              display: '-webkit-box',
+              WebkitLineClamp: 1,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+          >
+            {name}
+          </Typography>
+          <IconButton
+            sx={{
+              bgcolor: isAdded ? 'error.main' : 'primary.main',
+              color: 'white',
+              '&:hover': {
+                bgcolor: isAdded ? 'error.main' : 'primary.dark',
+              },
+              width: '40px', // Fix width
+              height: '40px', // Fix height
+            }}
+            
+            onClick={() => handler(_id)}
+            disabled={handlerIsLoading}
+          >
+            {isAdded ? <RemoveIcon /> : <AddIcon />}
+          </IconButton>
+        </Stack>
+      </ListItem>
+    );
+  };
+  
+export default memo(UserItem)
