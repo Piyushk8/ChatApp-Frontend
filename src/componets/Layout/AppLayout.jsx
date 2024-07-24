@@ -10,10 +10,14 @@ import Profile from '../specific/Profile';
 import { useMyChatsQuery } from '../../redux/api/api';
 import { useDispatch, useSelector } from 'react-redux';
 import { setIsMobile } from '../../redux/reducer/misc';
+import { getSocket } from '../../socket';
 
 
 const AppLayout = () => (WrappedComponent) => {
   return (props) =>{
+    const socket = getSocket();
+    console.log(socket.id)
+
     const dispatch = useDispatch()
     const params = useParams();
     const chatId = params.chatId;
