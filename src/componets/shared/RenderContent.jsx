@@ -8,7 +8,7 @@ const RenderContent = ({file,url}) => {
         case "video":
             return <video preload='none' width={"200px"} controls src={url}/>
             
-        case "video":
+        case "image":
             return <img 
                 width={"200px"}
                 height={"150px"}

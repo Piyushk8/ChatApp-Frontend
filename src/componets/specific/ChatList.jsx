@@ -27,7 +27,7 @@ const ChatList = ({
         const isOnline = members?.some((member) =>
           onlineUsers.includes(member)
         );
-        console.log(avatar[0].avatar)
+
         return (
           <ChatItem
             index={index}
