@@ -10,19 +10,19 @@ import { getSocket } from '../socket';
 import { NEW_MESSAGE } from '../constant/events';
 import { useChatDetailsQuery } from '../redux/api/api';
 import {useSocketEvents} from "../hooks/hook"
-const user = {
-  _id:"mkasda"
-,name:"malk"
-}
-const Chat = ({chatId}) => {
+
+
+//const socket= io("http://localhost:3000",{withCredentials:true ,  upgrade: false, transports: ['websocket'], reconnection: true, forceNew: false})
+const Chat = ({chatId , user}) => {
   
+
   const [message,setMessage] = useState("");//states
   const [messages,setMessages] = useState([])
   const containerRef = useRef(null)
   const fileMenuRef = useRef(null)
 
   const socket = getSocket();
-
+  console.log(socket)
   
   //chat queries
   const chatDetails = useChatDetailsQuery({chatId ,skip: !chatId})

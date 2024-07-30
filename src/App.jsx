@@ -41,7 +41,7 @@ const App = () => {
             element={
               <SocketProvider>
                 <ProtectRoute user={user} />
-                </SocketProvider>
+              </SocketProvider>
             }
           >
             <Route path="/chats/:chatId" element={<Chat/>} />
