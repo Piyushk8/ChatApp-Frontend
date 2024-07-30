@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { userExists, userNotExists } from "./redux/reducer/auth";
 import { Toaster } from "react-hot-toast";
 import {getSocket , SocketProvider} from "./socket"
-// import { SocketProvider } from "./socket";
+
 
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
@@ -25,7 +25,8 @@ const App = () => {
   useEffect(() => {
     axios
       .get(`http://localhost:3000/api/v1/user/me`, { withCredentials: true })
-      .then(({ data }) => dispatch(userExists(data.user)))
+      .then(({ data }) =>{ console.log('profile fetch') ; 
+        return dispatch(userExists(data.user))})
       .catch((err) => dispatch(userNotExists()));
   }, [dispatch]);
 
@@ -34,17 +35,19 @@ const App = () => {
   ) : (
     <BrowserRouter>
       <Suspense fallback={<LayoutLoader />}>
-        <Routes>
+      <Routes>
+      
           <Route
             element={
               <SocketProvider>
                 <ProtectRoute user={user} />
-              </SocketProvider>
+                </SocketProvider>
             }
           >
-            <Route path="/" element={<Home />} />
-            <Route path="/chats/:chatId" element={<Chat />} />
+            <Route path="/chats/:chatId" element={<Chat/>} />
+            <Route path="/" element={<Home/>} />
             <Route path="/groups" element={<Groups />} />
+            
           </Route>
 
           <Route
@@ -54,7 +57,7 @@ const App = () => {
                 <Login />
               </ProtectRoute>
             }
-          />
+            />
 
           
         </Routes>

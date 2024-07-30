@@ -16,8 +16,7 @@ import { getSocket } from '../../socket';
 const AppLayout = () => (WrappedComponent) => {
   return (props) =>{
     const socket = getSocket();
-    console.log(socket.id)
-
+  
     const dispatch = useDispatch()
     const params = useParams();
     const chatId = params.chatId;
@@ -64,10 +63,12 @@ const AppLayout = () => (WrappedComponent) => {
           <Grid item sm={4} md={3}  sx={{display:{xs:"none" , sm:"block"}}}  height={"100%"} >
            {
             isLoading ? <Skeleton></Skeleton> : 
-            <ChatList chats={data?.transformedChats} chatId={chatId} 
-            newMessagesAlert={[{chatId:chatId,count:4}]}
-            onlineUsers={["1","2"]}
-            handleDeleteChat={handleDeleteChat}
+            <ChatList 
+              chats={data?.transformedChats} 
+              chatId={chatId} 
+              newMessagesAlert={[{chatId:chatId,count:4}]}
+              onlineUsers={["1","2"]}
+              handleDeleteChat={handleDeleteChat}
             />
            }
 

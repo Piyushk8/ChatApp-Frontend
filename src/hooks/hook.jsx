@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import toast from "react-hot-toast";
 
 const useAsyncMutation = (mutationHook) => {
@@ -33,5 +33,20 @@ const useAsyncMutation = (mutationHook) => {
 
   return [executeMutation, isLoading, data];
 };
+const useSocketEvents = (socket, handlers) => {
+  useEffect(() => {
+    Object.entries(handlers).forEach(([event, handler]) => {
+      socket.on(event, handler);
+      
+    });
 
-export {useAsyncMutation}
+    return () => {
+      Object.entries(handlers).forEach(([event, handler]) => {
+        socket.off(event, handler);
+      });
+    };
+  }, [socket, handlers]);
+};
+
+
+export {useAsyncMutation ,useSocketEvents}
