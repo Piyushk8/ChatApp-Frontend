@@ -1,7 +1,7 @@
 const fileFormat = (url)=>{
     const fileExtension = url.split(".").pop();
-
-    if(fileExtension==="mp4" || fileExtension==="webm" || "ogg"){
+  console.log(fileExtension)
+    if(fileExtension==="mp4" || fileExtension==="webm" || fileExtension=== "ogg"){
         return "video"
     } 
     else if (fileExtension === "mp3" || fileExtension === "wav") {
@@ -12,7 +12,11 @@ const fileFormat = (url)=>{
 
     return "file";
 }
-const transformImage = (url="")=>url;
+const transformImage = (url = "", width = 100) => {
+  const newUrl = url.replace("upload/", `upload/dpr_auto/w_${width}/`);
+
+  return newUrl;
+};
 
 const getOrSaveFromStorage = ({ key, value, get }) => {
     if (get)

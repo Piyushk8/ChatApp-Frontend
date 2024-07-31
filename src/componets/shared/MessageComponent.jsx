@@ -8,7 +8,7 @@ const MessageComponent = ({message , user} ) => {
   const {sender,content , attachments=[],createdAt} = message
   const sameSender = sender?._id === user?._id
   const  timeAgo = moment(createdAt).fromNow();
-    console.log(user?._id , sender._id);
+ 
   return (
     <div style={{
         alignSelf:sameSender? "flex-end":"flex-start",
@@ -31,13 +31,13 @@ const MessageComponent = ({message , user} ) => {
         attachments.length>0  && attachments.map((attachment,index)=>{
         const url = attachment.url;
         const file =fileFormat(url);
-
-        console.log(RenderContent(url,file));
-    return <Box>
-    <a href='' target='_blank' download style={{color:"black"}} >
-        {RenderContent(url,file)}
+            console.log(url,file)
+        // console.log(RenderContent(url,file));
+    return ( <Box key={index}>
+    <a href='' target='_blank' download  style={{color:"black"}} >
+        {RenderContent({url,file})}
     </a> 
-        </Box>
+        </Box>);
 
  
     })

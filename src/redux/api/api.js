@@ -6,7 +6,7 @@ import {server} from "../../constant/config.js"
 const api = createApi({
     reducerPath:"api",
     baseQuery:fetchBaseQuery({baseUrl:`${server}/api/v1/`}),
-    tagTypes:["Chat","user"],
+    tagTypes:["Chat","user", "message"],
 
     endpoints:(builder) =>({
         myChats:builder.query({
@@ -56,8 +56,25 @@ const api = createApi({
             },
             providesTags:["Chat"],
         }),
+        getMessages:builder.query({
+            query:({chatId ,page})=>({
+                url:`chat/message/${chatId}?page=${page}`,
+                credentials:"include"
+            }),
+            providesTags:["message"],
+        }),
+        sendAttachments:builder.mutation({
+            query:(data)=>({
+                url:`chat/message`,
+                method:"post",
+                credentials:"include",
+                body:data,
+            }),
+            invalidatesTags:["user"]
+        }),
+
 
     })
 })
 export default api
-export const  {useAcceptFriendRequestMutation,useGetNotificationsQuery,useMyChatsQuery ,useSendFriendRequestMutation, useLazySearchUserQuery , useChatDetailsQuery} = api;
+export const  {useSendAttachmentsMutation,useAcceptFriendRequestMutation,useGetNotificationsQuery,useMyChatsQuery ,useSendFriendRequestMutation, useLazySearchUserQuery , useChatDetailsQuery,useGetMessagesQuery} = api;
