@@ -1,5 +1,6 @@
 import React from 'react'
-import { Grid ,Skeleton , Stack} from '@mui/material'
+import { Grid ,Skeleton , Stack, Typography} from '@mui/material'
+import { BouncingSkeleton } from '../StyledComponent'
 const Layoutloader = () => {
   return (
     <>
@@ -18,6 +19,22 @@ const Layoutloader = () => {
         </Grid>
 
     </>
+  )
+}
+
+export const TypingLoader = ()=>{
+  return (
+    <Stack spacing={"0.5rem"}
+    direction={"row"} 
+    padding={"0.5rem"} 
+    justifyContent={"center"}
+    >
+      <BouncingSkeleton style={{animationDelay:"0.1s"}} variant='circular' width={15} height={15}/>
+      <BouncingSkeleton style={{animationDelay:"0.2s"}} variant='circular' width={15} height={15}/>
+      <BouncingSkeleton variant='circular' width={15} style={{animationDelay:"0.3s"}} height={15}/>
+      <BouncingSkeleton variant='circular' width={15} height={15} style={{animationDelay:"0.4s"}}/>
+      
+    </Stack>
   )
 }
 

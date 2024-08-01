@@ -35,10 +35,15 @@ const ChatItem = ({
           display: "flex",
           gap: "1rem",
           alignItems: "center",
-          backgroundColor: sameSender ? "black" : "unset",
+          backgroundColor: sameSender ? "#054640" : "unset",
           color: sameSender ? "white" : "unset",
           position: "relative",
           padding: "1rem",
+          marginBottom: "2px",
+          borderBottom:"1px solid",
+          borderBottomColor:"lightgrey",
+          // boxShadow:" 0 2px 4px rgba(0, 0, 0, 0.1)"
+          wordBreak:"break-word"
         }}
       >
         <AvatarCard avatar={avatar} />
@@ -46,13 +51,14 @@ const ChatItem = ({
         <Stack>
           <Typography>{FriendName}</Typography>
           {newMessageAlert && (
-            <Typography>{newMessageAlert.count} New Message</Typography>
+            <Typography sx={{fontSize:"0.7rem",color:"gray"}}>{newMessageAlert.count} New Message</Typography>
           )}
         </Stack>
 
         {isOnline && (
           <Box
             sx={{
+              
               width: "10px",
               height: "10px",
               borderRadius: "50%",

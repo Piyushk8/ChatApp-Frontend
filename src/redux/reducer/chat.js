@@ -13,6 +13,10 @@ const initialState = {
       count: 0,
     },
   ],
+  // newMessagesAlert:[{
+  //   chatId: "",
+  //   count: 0,
+  // }]
 };
 
 const chatSlice = createSlice({

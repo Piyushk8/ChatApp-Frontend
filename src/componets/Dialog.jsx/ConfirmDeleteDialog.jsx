@@ -2,6 +2,7 @@ import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogT
 import React from 'react'
 
 const ConfirmDeleteDialog = ({open , handleClose ,deleteHandler}) => {
+  
   return (
     <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Confirm Delete</DialogTitle>

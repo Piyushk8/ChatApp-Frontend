@@ -1,18 +1,18 @@
 import React, { useState  ,lazy, Suspense} from 'react'
 import {useNavigate} from "react-router-dom"
-import { AppBar ,Box, IconButton, Toolbar, Tooltip, Typography } from '@mui/material'
+import { AppBar ,Badge,Box, IconButton, Toolbar, Tooltip, Typography } from '@mui/material'
 import { orange } from '@mui/material/colors'
 import MenuIcon from '@mui/icons-material/Menu';
 import Search  from '@mui/icons-material/Search';
 import Add from '@mui/icons-material/Add';
 import Group from '@mui/icons-material/Group';
-
 import {Logout, Notifications as NotificationIcon} from "@mui/icons-material"
 import axios from "axios"
 import toast from 'react-hot-toast';
 import { server } from '../../constant/config';
 import { useDispatch, useSelector } from 'react-redux';
-import { setIsMobile, setIsNotification, setIsSearch } from '../../redux/reducer/misc';
+import { setIsMobile, setIsNewGroup, setIsNotification, setIsSearch } from '../../redux/reducer/misc';
+import { resetNotificationCount } from '../../redux/reducer/chat';
 const SearchD = lazy (()=>import ("../specific/SearchD"))
 const NotificationsDialog = lazy (()=>import ("../specific/Notifications"))
 const NewGroup = lazy (()=>import ("../specific/NewGroup"))
@@ -22,22 +22,20 @@ const Header = () => {
 
   //all Handler function
   const handleMobile= ()=>{
-   
-    dispatch(setIsMobile(true))
-    
+    dispatch(setIsMobile(true))    
   }
   const OpenSearchDialogue= ()=>{
     dispatch(setIsSearch(true))
   }
   const OpenNewGroup= ()=>{
-    setisNewGroup((prev)=>!prev)
+    dispatch(setIsNewGroup(true))
   }
   const navitageToGroup= ()=>{
-    
     nav("/groups")
   }
   const OpenNotificationDialog = ()=>{
     dispatch(setIsNotification(true))
+    dispatch(resetNotificationCount())
   }
   
 const LogoutHandler = ()=>{
@@ -50,14 +48,28 @@ const LogoutHandler = ()=>{
   .catch((res)=>toast.error(res.data.message))
 }
  
-  const {isSearch , isNotification} = useSelector((state)=>state.misc)
+  const {isNewGroup,isSearch , isNotification} = useSelector((state)=>state.misc)
+  const {notificationCount} = useSelector((state)=>state.chat)
   
-  const [isNewGroup, setisNewGroup] = useState(false)
   
+  
+  const IconBtn = ({title , icon , onClick ,value})=>{
+
+    return(
+      <Tooltip title={title}>
+      <IconButton color='inherit' size='large' onClick={onClick}>
+        {
+          value ? <Badge badgeContent={value}>{icon}</Badge> : icon
+        }
+      </IconButton>
+    </Tooltip>
+    )
+  }
+
   return (
     <>
      <Box sx={{flexgrow:1}} height={"4rem"} >
-      <AppBar position='static' sx={{bgcolor:"#1E90FF"}}>
+      <AppBar position='static' sx={{bgcolor:"#215C54"}}>
         <Toolbar>
           <Typography variant='h6' sx={{display:{xs:"none" , sm:"block"}}}>
             Chat App
@@ -90,11 +102,12 @@ const LogoutHandler = ()=>{
             <Logout/>
           </IconButton>
         </Tooltip>
-        <Tooltip title="Notify">
-          <IconButton color='inherit' size='large' onClick={OpenNotificationDialog}>
-            <NotificationIcon></NotificationIcon>
-          </IconButton>
-        </Tooltip>
+      <IconBtn
+        title={"Notifications"}
+        icon={<NotificationIcon/>}
+        value={notificationCount}
+        onClick={OpenNotificationDialog}/>
+        
   
         </Toolbar>
       </AppBar>
@@ -111,5 +124,6 @@ const LogoutHandler = ()=>{
     </>
   )
 }
+
 
 export default Header

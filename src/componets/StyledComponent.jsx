@@ -1,4 +1,5 @@
-import { styled } from "@mui/material";
+import { keyframes, Skeleton, styled } from "@mui/material";
+import { animate, animations } from "framer-motion";
 import { Link } from "react-router-dom";
 export const VisuallyHiddenInput = styled("input")
 ({
@@ -32,4 +33,12 @@ background-color: ${"white"};
 label:Text;
 }
 `
-
+const BouncingAnimation = keyframes`
+    0% { transform:scale(1); }
+    50% { transform:scale(1.5) }
+    100% { transform:scale(1) }
+  
+`
+export const BouncingSkeleton = styled(Skeleton)(()=>{
+    animation:`${BouncingAnimation} is infinite`
+})

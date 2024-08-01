@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  isNewGroup:false,
+  isNewGroup: false,
   isAddMember: false,
   isNotification: false,
   isMobile: false,

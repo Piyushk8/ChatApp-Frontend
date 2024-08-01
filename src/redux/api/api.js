@@ -72,9 +72,70 @@ const api = createApi({
             }),
             invalidatesTags:["user"]
         }),
-
-
+        getMyGroups:builder.query({
+            query:()=>({
+                url:`chat/my/groups`,
+                credentials:"include"
+            }),
+            providesTags:["Chat"],
+        }),
+        availableFriends:builder.query({
+            query:(chatId)=>{
+                let url = `user/friends`;
+                if(chatId) url += `?chatId=${chatId}`
+                
+                return{
+                    url,
+                    credentials:"include"
+                }
+            },
+            providesTags:["chat"],
+        }),
+        CreateNewGroup:builder.mutation({
+            query:({name,members})=>({
+                url:`chat/new`,
+                method:"post",
+                credentials:"include",
+                body:{members,name},
+            }),
+            invalidatesTags:["chat"]
+        }),
+        renameGroup:builder.mutation({
+            query:({chatId,name})=>({
+                url:`chat/${chatId}`,
+                method:"PUT",
+                credentials:"include",
+                body:{name},
+            }),
+            invalidatesTags:["chat"]
+        }),
+        removeGroupMember:builder.mutation({
+            query:({userId,chatId})=>({
+                url:`chat/removemember`,
+                method:"PUT",
+                credentials:"include",
+                body:{userId,chatId},
+            }),
+            invalidatesTags:["chat"]
+        }),
+        addGroupMember:builder.mutation({
+            query:({userId,chatId})=>({
+                url:`chat/addmembers`,
+                method:"PUT",
+                credentials:"include",
+                body:{userId,chatId},
+            }),
+            invalidatesTags:["chat"]
+        }),
+        deleteChat:builder.mutation({
+            query:({id})=>({
+                url:`chat/${id}`,
+                method:"DELETE",
+                credentials:"include",
+            }),
+            invalidatesTags:["chat"]
+        }),
     })
 })
 export default api
-export const  {useSendAttachmentsMutation,useAcceptFriendRequestMutation,useGetNotificationsQuery,useMyChatsQuery ,useSendFriendRequestMutation, useLazySearchUserQuery , useChatDetailsQuery,useGetMessagesQuery} = api;
+export const  { useDeleteChatMutation,useAddGroupMemberMutation,useRemoveGroupMemberMutation,useRenameGroupMutation,useCreateNewGroupMutation,useGetMyGroupsQuery,useSendAttachmentsMutation,useAcceptFriendRequestMutation,useGetNotificationsQuery,useMyChatsQuery ,useSendFriendRequestMutation, useLazySearchUserQuery , useChatDetailsQuery,useGetMessagesQuery,useAvailableFriendsQuery} = api;

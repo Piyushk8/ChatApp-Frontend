@@ -1,49 +1,88 @@
-import React from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import Header from './Header'
 import Title from "../shared/Title"
 import {Drawer, Grid, Skeleton} from "@mui/material"
-import { green, red, yellow } from '@mui/material/colors';
 import ChatList from '../specific/ChatList';
-import {SampleData} from "../../constant/SampleData"
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Profile from '../specific/Profile';
 import { useMyChatsQuery } from '../../redux/api/api';
 import { useDispatch, useSelector } from 'react-redux';
-import { setIsMobile } from '../../redux/reducer/misc';
+import { setIsDeleteMenu, setIsMobile, setSelectedDeleteChat } from '../../redux/reducer/misc';
 import { getSocket } from '../../socket';
-import { io } from 'socket.io-client';
+import { NEW_MESSAGE, NEW_MESSAGE_ALERT, NEW_REQUEST, REFETECH_CHATS } from '../../constant/events';
+import { useSocketEvents } from '../../hooks/hook';
+import { incrementNotification, setNewMessagesAlert } from '../../redux/reducer/chat';
+import { getOrSaveFromStorage } from '../../lib/features';
+import DeleteChatMenu from '../Dialog.jsx/deleteChatMenu';
 
 //const socket= io("http://localhost:3000",{withCredentials:true})
 
 const AppLayout = () => (WrappedComponent) => {
   return (props) =>{
-    // const socket = getSocket();
-  
+    const nav = useNavigate();
+    const socket = getSocket();
     const dispatch = useDispatch()
     const params = useParams();
     const chatId = params.chatId;
+    const deleteOptionAnchor = useRef(null);
+
       //to fetch chats using RTK QUERY
     const {isLoading , data,isError ,error, refetch} = useMyChatsQuery("")
     const {isMobile } = useSelector((state)=>state.misc)
     const {user} = useSelector((state)=>state.auth)
-    // console.log(data) to check for chats incoming
+    const {newMessagesAlert} = useSelector((state)=>state.chat)
 
+    // console.log(data) to check for chats incoming
+    //All Handlers 
     const handleDeleteChat = (e ,_id , groupChat)=>{
-      e.preventDefault();
-      console.log("deletd chat" , _id);
+      e.preventDefault()
+      deleteOptionAnchor.current = e.currentTarget;
+      console.log(deleteOptionAnchor.current)
+      dispatch(setIsDeleteMenu(true))
+      dispatch(setSelectedDeleteChat({chatId,_id,groupChat}))
     };
     
     const handleMobileClose=()=>{
       dispatch(setIsMobile(false))
-      
-
     }
 
+    //These Are event listen Handler
+    const newRequestHandler = useCallback(()=>{
+      dispatch(incrementNotification())
+    },[dispatch])
+    
+    const newMessageAlertHandler = useCallback((data)=>{
+     if (chatId === data.chatId) return;
+      dispatch(setNewMessagesAlert(data))
+    },[chatId])
+
+    const newMessagesHandler = useCallback(()=>{
+     refetch()
+    },[refetch])
+    const refetchChatHandler = useCallback(()=>{
+      console.log("refetch")
+     refetch()
+     nav("/")
+    },[refetch])
+    
+    const eventHandlers = {[NEW_MESSAGE_ALERT]:newMessageAlertHandler,
+      [NEW_MESSAGE]:newMessagesHandler,
+      [NEW_REQUEST]:newRequestHandler,
+      [REFETECH_CHATS]:refetchChatHandler,
+    
+    }
+    useSocketEvents(socket,eventHandlers)
+
+    //All Items to Load on Page Load
+    useEffect(()=>{
+      getOrSaveFromStorage({key:NEW_MESSAGE_ALERT,value:newMessagesAlert})
+    },[newMessagesAlert])
 
   return (
         <>
         <Title title='Chat App ' description='Hey!'></Title>
         <Header></Header>
+        <DeleteChatMenu  dispatch={dispatch} deleteOptionAnchor={deleteOptionAnchor}/>
 
         {
           isLoading?<Skeleton/>: <Drawer onClose={handleMobileClose}
@@ -51,7 +90,7 @@ const AppLayout = () => (WrappedComponent) => {
              <ChatList 
              w="70vw"
              chats={data?.transformedChats} chatId={chatId} 
-            newMessagesAlert={[{chatId:chatId,count:4}]}
+            newMessagesAlert={newMessagesAlert}
             onlineUsers={["1","2"]}
             handleDeleteChat={handleDeleteChat}
             />
@@ -68,7 +107,7 @@ const AppLayout = () => (WrappedComponent) => {
             <ChatList 
               chats={data?.transformedChats} 
               chatId={chatId} 
-              newMessagesAlert={[{chatId:chatId,count:4}]}
+              newMessagesAlert={newMessagesAlert}
               onlineUsers={["1","2"]}
               handleDeleteChat={handleDeleteChat}
             />
