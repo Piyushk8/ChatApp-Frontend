@@ -15,11 +15,12 @@ const ChatList = ({
   ],
   handleDeleteChat,
 }) => {
+  console.log("online",onlineUsers)
   return (
     <Stack width={w} direction={"column"} overflow={"auto"} height={"100%"}>
       {chats?.map((data, index) => {
         const { avatar, _id, name, groupChat, members } = data;
-
+        console.log("members",members)
         const newMessageAlert = newMessagesAlert.find(
           ({ chatId }) => chatId === _id
         );
@@ -27,6 +28,7 @@ const ChatList = ({
         const isOnline = members?.some((member) =>
           onlineUsers.includes(member)
         );
+        console.log(isOnline)
 
         return (
           <ChatItem

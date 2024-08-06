@@ -33,12 +33,12 @@ const useAsyncMutation = (mutationHook) => {
 
   return [executeMutation, isLoading, data];
 };
+
+
 const useSocketEvents = (socket, handlers) => {
   useEffect(() => {
     Object.entries(handlers).forEach(([event, handler]) => {
       socket.on(event, handler);
-      console.log(event)
-      
     });
 
     return () => {
@@ -48,6 +48,7 @@ const useSocketEvents = (socket, handlers) => {
     };
   }, [socket, handlers]);
 };
+
 
 const useErrors = (errors = []) => {
   useEffect(() => {

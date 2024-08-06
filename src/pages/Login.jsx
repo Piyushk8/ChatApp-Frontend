@@ -60,7 +60,7 @@ function Login() {
   formData.append("username", username.value);
   formData.append("password", password.value);
 
-  axios.post("http://localhost:3000/api/v1/user/signup", formData, {
+  axios.post(`${server}/api/v1/user/signup`, formData, {
     withCredentials: true,
     headers: {
       "Content-Type": "multipart/form-data" // Ensure the Content-Type is set correctly for FormData

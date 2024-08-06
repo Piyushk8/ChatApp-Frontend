@@ -1,6 +1,6 @@
 const fileFormat = (url)=>{
     const fileExtension = url.split(".").pop();
-  console.log(fileExtension)
+ 
     if(fileExtension==="mp4" || fileExtension==="webm" || fileExtension=== "ogg"){
         return "video"
     } 

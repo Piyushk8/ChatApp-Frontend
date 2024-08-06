@@ -6,7 +6,7 @@ import { InputBox} from '../componets/StyledComponent';
 import FileMenu from '../componets/Dialog.jsx/FileMenu';
 import MessageComponent from '../componets/shared/MessageComponent';
 import { getSocket } from '../socket';
-import { ALERT, IS_TYPING, NEW_MESSAGE, STOP_TYPING } from '../constant/events';
+import { ALERT, CHAT_JOINED, CHAT_LEFT, IS_TYPING, NEW_MESSAGE, STOP_TYPING } from '../constant/events';
 import { useChatDetailsQuery, useGetMessagesQuery } from '../redux/api/api';
 import {useErrors, useSocketEvents} from "../hooks/hook"
 import {useInfiniteScrollTop} from "6pp"
@@ -15,7 +15,6 @@ import { setIsFileMenu } from '../redux/reducer/misc';
 import { removeNewMessagesAlert } from '../redux/reducer/chat';
 import { TypingLoader } from '../componets/Loaders/Layoutloader';
 import { useNavigate } from 'react-router-dom';
-//const socket= io("http://localhost:3000",{withCredentials:true ,  upgrade: false, transports: ['websocket'], reconnection: true, forceNew: false})
 
 const Chat = ({chatId , user}) => {
   const dispatch = useDispatch();
@@ -57,12 +56,14 @@ const Chat = ({chatId , user}) => {
     {isError:chatDetails.isError ,error:chatDetails.error}]
   
 useEffect(()=>{
+  socket.emit(CHAT_JOINED,{userId:user._id,members})
   dispatch(removeNewMessagesAlert(chatId))
   return()=>{
     setMessages([]);
     setMessage("");
     setOldMessages([]);
     setPage(1);
+    socket.emit(CHAT_LEFT,{userId:user._id,members})
   }
 },[chatId])
 

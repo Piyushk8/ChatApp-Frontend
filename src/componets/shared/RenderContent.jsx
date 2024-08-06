@@ -3,7 +3,7 @@ import { transformImage } from '../../lib/features';
 import { FileOpen } from '@mui/icons-material';
 
 const RenderContent = ({file,url}) => {
-  console.log(url,file)
+  
     switch (file){
         case "video":
             return <video preload='none' width={"200px"} controls src={url}/>
