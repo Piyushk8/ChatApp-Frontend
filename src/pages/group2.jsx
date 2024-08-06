@@ -24,7 +24,6 @@ import {
   import  LayoutLoader  from "../componets/Loaders/Layoutloader";
   import AvatarCard from "../componets/shared/AvatarCard";
   import { LinkComponent } from "../componets/StyledComponent";
-  //import { bgGradient, matBlack } from "../constants/color";
   import { useDispatch, useSelector } from "react-redux";
   import UserItem from "../componets/shared/UserItem";
   import { useAsyncMutation, useErrors } from "../hooks/hook";
@@ -42,116 +41,131 @@ import {
   );
   const AddMemberDialog = lazy(() =>
     import("../componets/Dialog.jsx/AddMemberDialog")
-  );
+);
+
+
+const Group2 = () => {
+  const chatId = useSearchParams()[0].get("group");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+ 
   
-  const Group2 = () => {
-    const chatId = useSearchParams()[0].get("group");
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    console.log(chatId)
-    const { isAddMember } = useSelector((state) => state.misc);
-    const myGroups = useGetMyGroupsQuery("");
-   
-    const groupDetails = useChatDetailsQuery({chatId , populate:true},{skip:!chatId})
-    const [deleteGroup , isLoadingDeleteGroup] = useAsyncMutation(useDeleteChatMutation)
-    
-    const [renameGroup ,isLoadingGroupName ] = useAsyncMutation(useRenameGroupMutation)
-    
-    const [removeMember ,isLoadingRemoveMember  ] = useAsyncMutation(useRemoveGroupMemberMutation)
-    
+  const [groupName, setGroupName] = useState("");
+  const [groupNameUpdatedValue, setGroupNameUpdatedValue] = useState("");
+  const [members, setMembers] = useState([]);
+  const { isAddMember } = useSelector((state) => state.misc);
   
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [isEdit, setIsEdit] = useState(false);
-    const [confirmDeleteDialog, setConfirmDeleteDialog] = useState(false);
+  //Rtk Quries
+  const {data:myGroups,isError:myGroupsIsError,error:myGroupsError,isLoading:isLoadingMygroups,refetch:refetchMyGroups} = useGetMyGroupsQuery("");
+  const {data:groupDetails,isError:groupDetailsIsError,error:groupDetailsError,refetch:refetchGroupDetails} = useChatDetailsQuery({chatId , populate:true},{skip:!chatId})
+  const [deleteGroup , isLoadingDeleteGroup] = useAsyncMutation(useDeleteChatMutation)
   
-    const [groupName, setGroupName] = useState("");
-    const [groupNameUpdatedValue, setGroupNameUpdatedValue] = useState("");
+  const [renameGroup ,isLoadingGroupName ] = useAsyncMutation(useRenameGroupMutation)
+  const [removeMember ,isLoadingRemoveMember  ] = useAsyncMutation(useRemoveGroupMemberMutation)
   
-    const [members, setMembers] = useState([]);
+  
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [confirmDeleteDialog, setConfirmDeleteDialog] = useState(false);
   
     const errors = [
       {
-        isError: myGroups.isError,
-        error: myGroups.error,
+        isError:myGroupsIsError,
+        error: myGroupsError,
       },
       {
-        isError: groupDetails.isError,
-        error: groupDetails.error,
+        isError: groupDetailsIsError,
+        error: groupDetailsError,
       },
     ];
   
     useErrors(errors);
   
-    useEffect(() => {
-      const groupData = groupDetails.data;
-      if (groupData) {
-        console.log(groupData)
-        setGroupName(groupData.chat.name);
-        setGroupNameUpdatedValue(groupData.chat.name);
-        setMembers(groupData.chat.members);
-      }
-  
-      return () => {
-        setGroupName("");
-        setGroupNameUpdatedValue("");
-        setMembers([]);
-        setIsEdit(false);
-      };
-    }, [groupDetails.data]);
-  
+    
     const navigateBack = () => {
       navigate("/");
     };
-  
+    
     const handleMobile = () => {
       setIsMobileMenuOpen((prev) => !prev);
     };
-  
+    
     const handleMobileClose = () => setIsMobileMenuOpen(false);
-  
-    const updateGroupName = () => {
+    
+    const updateGroupName = async() => {
       setIsEdit(false);
-      updateGroup("Updating Group Name...", {
+      await renameGroup("Updating Group Name...", {
         chatId,
         name: groupNameUpdatedValue,
-      });
+      })
+
+       refetchMyGroups()
+       refetchGroupDetails()
+      
     };
-  
+    
     const openConfirmDeleteHandler = () => {
       setConfirmDeleteDialog(true);
     };
-  
+    
     const closeConfirmDeleteHandler = () => {
       setConfirmDeleteDialog(false);
     };
-  
+    
     const openAddMemberHandler = () => {
       dispatch(setIsAddMember(true));
+      
     };
-  
-    const deleteHandler = () => {
-      deleteGroup("Deleting Group...", chatId);
+    
+    const deleteHandler = async() => {
+      await deleteGroup("Deleting Group...", {id:chatId});
+      refetchMyGroups()
+      refetchGroupDetails()
       closeConfirmDeleteHandler();
+      
       navigate("/groups");
+      // refetch();
     };
-  
-    const removeMemberHandler = (userId) => {
-      removeMember("Removing Member...", { chatId, userId });
+    
+    const removeMemberHandler = async(userId) => {
+     await removeMember("Removing Member...", { chatId, userId });
+      refetchMyGroups()
+       refetchGroupDetails()
     };
-  
+    
     useEffect(() => {
       if (chatId) {
-        setGroupName(`Group Name ${chatId}`);
-        setGroupNameUpdatedValue(`Group Name ${chatId}`);
+        setGroupName(`${groupDetails?.chat?.name}`);
+        setGroupNameUpdatedValue(`${groupDetails?.chat?.name}`);
       }
-  
+      
       return () => {
         setGroupName("");
         setGroupNameUpdatedValue("");
         setIsEdit(false);
       };
     }, [chatId]);
-  
+    
+    useEffect(() => {
+      const groupData = groupDetails;
+      if(myGroups) console.log("mygroups")
+      if (groupData) {
+        console.log("Group data chnaged")
+        setGroupName(groupData?.chat?.name);
+        setGroupNameUpdatedValue(groupData?.chat?.name);
+        setMembers(groupData.chat.members);
+      }
+      console.log("mygroups",myGroups)
+      console.log("groupsDetails",groupDetails)
+      
+      return () => {
+        setGroupName("");
+        setGroupNameUpdatedValue("");
+        setMembers([]);
+        setIsEdit(false);
+      };
+    }, [myGroups,groupDetails]);
+    
     const IconBtns = (
       <>
         <Box
@@ -191,6 +205,7 @@ import {
     );
   
     const GroupName = (
+      <>
       <Stack
         direction={"row"}
         alignItems={"center"}
@@ -220,6 +235,7 @@ import {
           </>
         )}
       </Stack>
+      </>
     );
     
     
@@ -255,7 +271,7 @@ import {
       </Stack>
     );
 
-    return myGroups.isLoading ? (
+    return isLoadingMygroups ? (
       <LayoutLoader />
     ) : (
       <Grid container height={"100vh"}>
@@ -269,7 +285,7 @@ import {
           }}
           sm={4}
         >
-          <GroupsList myGroups={myGroups?.data?.transformedGroups} chatId={chatId} />
+          <GroupsList myGroups={myGroups?.transformedGroups} chatId={chatId} />
         </Grid>
   
         <Grid
@@ -284,8 +300,15 @@ import {
             padding: "1rem 3rem",
           }}
         >
-          {IconBtns}
-  
+          <Stack direction={"row"} justifyContent={"space-between"}>
+            {IconBtns}
+            <Typography 
+            color={"black"}
+            fontSize={"2rem"}
+            variant="h1"
+            fontWeight={"bold"}
+            > Manage Group</Typography>
+          </Stack>
           {groupName && (
             <>
               {GroupName}
@@ -294,8 +317,11 @@ import {
                 margin={"2rem"}
                 alignSelf={"flex-start"}
                 variant="body1"
+                fontSize={"1.2rem"}
+                
+                sx={{alignSelf:"center"}}
               >
-                Members
+               All Members
               </Typography>
   
               <Stack
@@ -365,7 +391,7 @@ import {
         >
           <GroupsList
             w={"50vw"}
-            myGroups={myGroups?.data?.transformedGroups}
+            myGroups={myGroups?.transformedGroups}
             chatId={chatId}
           />
         </Drawer>

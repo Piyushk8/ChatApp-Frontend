@@ -15,14 +15,14 @@ const NewGroup = () => {
   const dispatch = useDispatch();
   const [selectedMembers, setselectedMembers] = useState([])
 
-    var {isError,error,data,isLoading} = useAvailableFriendsQuery("")
-    const [newGroup,groupLoading] = useAsyncMutation(useCreateNewGroupMutation)
+  var {isError,error,data,isLoading} = useAvailableFriendsQuery("")
+  const [newGroup,groupLoading] = useAsyncMutation(useCreateNewGroupMutation)
     
-    const groupName = useInputValidation("");
-    const selectMemberHandler = (id)=>{
-         setselectedMembers((prev)=>(prev.includes(id) ? prev.filter((currentElementId)=> currentElementId!=id )  :[...prev,id]))
-    };
-    
+  const groupName = useInputValidation("");
+  const selectMemberHandler = (id)=>{
+        setselectedMembers((prev)=>(prev.includes(id) ? prev.filter((currentElementId)=> currentElementId!=id )  :[...prev,id]))
+  };
+  
     const submitHandler = ()=>{
       console.log(selectedMembers)
       if(!groupName.value) return toast.error("Group Name Required")

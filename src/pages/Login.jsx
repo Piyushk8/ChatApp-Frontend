@@ -41,7 +41,7 @@ function Login() {
         toast.success(data.message, {
           id: toastId,
         });
-        
+        nav("/")
       } catch (error) {
         toast.error(error?.response?.data?.message || "Something Went Wrong", {
           id: toastId,
