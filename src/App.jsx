@@ -7,15 +7,15 @@ import { server } from "./constant/config";
 import { useDispatch, useSelector } from "react-redux";
 import { userExists, userNotExists } from "./redux/reducer/auth";
 import { Toaster } from "react-hot-toast";
-import {getSocket , SocketProvider} from "./socket"
-import Group2 from "./pages/group2";
+import { SocketProvider} from "./socket"
+import NotFound from "./pages/NotFound";
+
 
 
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
 const Chat = lazy(() => import("./pages/Chat"));
-const Groups = lazy(() => import("./pages/Group"));
-
+const Group2 = lazy(() => import("./pages/group2"));
 
 const App = () => {
   
@@ -24,9 +24,9 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log("App.js");
+    
     axios
-      .get(`http://localhost:3000/api/v1/user/me`, { withCredentials: true })
+      .get(`${server}/api/v1/user/me`, { withCredentials: true })
       .then(({ data }) =>{ console.log('profile fetch') ; 
         return dispatch(userExists(data.user))})
 
@@ -51,8 +51,8 @@ const App = () => {
           >
             <Route path="/" element={<Home/>} />
             <Route path="/chats/:chatId" element={<Chat/>} />
-            {/* <Route path="/groups" element={<Groups />} /> */}
             <Route path="/groups" element={<Group2 />} />
+            <Route path="/:asd" element={<NotFound/>} />
 
             
           </Route>
