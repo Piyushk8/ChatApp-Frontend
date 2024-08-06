@@ -8,35 +8,48 @@ import axios from 'axios';
 import { server } from '../constant/config';
 import { useDispatch , useSelector} from 'react-redux';
 import { userExists } from '../redux/reducer/auth';
-import toast from 'react-hot-toast';
-
+import toast from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom'
 function Login() {
-    const dispatch = useDispatch();
-  
-    const handleLogin = (e)=>{
-      e.preventDefault()
-      console.log(username.value, password.value)
-      const config= {
-        withCredentials:true,
-        headers:{
-          "Content-Type":"application/json"
-        }
-        }
+  const dispatch = useDispatch();
+  const nav = useNavigate("/")
+  const [isLogin, setIsLogin] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
-      axios.post(`http://localhost:3000/api/v1/user/login`,{
-        username:username.value,
-        password:password.value
-        },config)
-        .then((res)=>{
-            dispatch(userExists(true))
-            toast.success(res.data.message)
-        })
-        .catch((err)=>{
-          console.log(err)
-          toast.error(err.response.data.message)
-        })
-      
-    }
+    const handleLogin = async(e)=>{
+     
+      const toastId = toast.loading("Logging In...");
+
+      setIsLoading(true);
+      const config = {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+  
+      try {
+        const { data } = await axios.post(
+          `${server}/api/v1/user/login`,
+          {
+            username: username.value,
+            password: password.value,
+          },
+          config
+        );
+        dispatch(userExists(data.user));
+        toast.success(data.message, {
+          id: toastId,
+        });
+        
+      } catch (error) {
+        toast.error(error?.response?.data?.message || "Something Went Wrong", {
+          id: toastId,
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
     const handleSignUp = (e)=>{
         e.preventDefault();
 
@@ -57,9 +70,9 @@ function Login() {
     }
 
 
-  const [isLogin,setisLogin] = useState(true);
+ 
   const toggleisLogin = ()=>{
-    setisLogin((prev) => !prev)
+    setIsLogin((prev) => !prev)
   }
   const name = useInputValidation();
   const bio = useInputValidation("" ,);

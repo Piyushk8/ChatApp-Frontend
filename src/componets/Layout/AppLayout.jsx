@@ -31,7 +31,7 @@ const AppLayout = () => (WrappedComponent) => {
     const {isMobile } = useSelector((state)=>state.misc)
     const {user} = useSelector((state)=>state.auth)
     const {newMessagesAlert} = useSelector((state)=>state.chat)
-
+    
     // console.log(data) to check for chats incoming
     //All Handlers 
     const handleDeleteChat = (e ,_id , groupChat)=>{
@@ -52,17 +52,17 @@ const AppLayout = () => (WrappedComponent) => {
     },[dispatch])
     
     const newMessageAlertHandler = useCallback((data)=>{
-     if (chatId === data.chatId) return;
-      dispatch(setNewMessagesAlert(data))
+      if (chatId === data.chatId) return;
+        dispatch(setNewMessagesAlert(data))
     },[chatId])
 
     const newMessagesHandler = useCallback(()=>{
-     refetch()
+      refetch()
     },[refetch])
+
     const refetchChatHandler = useCallback(()=>{
       console.log("refetch")
-     refetch()
-     nav("/")
+      refetch()
     },[refetch])
     
     const eventHandlers = {[NEW_MESSAGE_ALERT]:newMessageAlertHandler,
@@ -85,7 +85,10 @@ const AppLayout = () => (WrappedComponent) => {
         <DeleteChatMenu  dispatch={dispatch} deleteOptionAnchor={deleteOptionAnchor}/>
 
         {
-          isLoading?<Skeleton/>: <Drawer onClose={handleMobileClose}
+          isLoading ?
+          <Skeleton/> 
+                  : 
+          <Drawer onClose={handleMobileClose}
             open={isMobile}>
              <ChatList 
              w="70vw"
@@ -115,7 +118,7 @@ const AppLayout = () => (WrappedComponent) => {
 
                {/* </ChatList> */}
           </Grid>
-        
+        {/* {mainBody} */}
           <Grid item xs={12} sm={8}  md={5} bgcolor="#F0F0F0"  lg={6} height={"100%"} >
           <WrappedComponent {...props} user={user}  chatId={chatId} />
           </Grid>

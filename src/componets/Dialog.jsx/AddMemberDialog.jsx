@@ -12,11 +12,10 @@ const AddMemberDialog = ({chatId}) => {
     const [addMember ,isLoadingAddMember  ] = useAsyncMutation(useAddGroupMemberMutation)
     const {isError,isLoading,error,data} = useAvailableFriendsQuery(chatId)
     //states
-     const [selectedMembers, setselectedMembers] = useState([])
+    const [selectedMembers, setselectedMembers] = useState([])
 
     const { isAddMember} = useSelector((state)=>state.misc)
 
-console.log(data)
     const errors = [{
         isError:isError,
         error:error
@@ -25,37 +24,46 @@ console.log(data)
     const selectMemberHandler = (id)=>{
         setselectedMembers((prev)=>(prev.includes(id) ? prev.filter((currentElementId)=> currentElementId!=id )  :[...prev,id]))
     };
-       // console.log(selectedMembers)
 
     const addMemberSubmitHandler=()=>{
         addMember("Adding members..",{chatId,members:selectedMembers})
-    }
+    };
+    console.log(selectedMembers)
+
     const closeHandler=()=>{
     dispatch(setIsAddMember(false))
-    }
-
+    };
 
     useErrors(errors)
+
     return (
-    <Dialog open={isAddMember} onClose={closeHandler}> 
+    <Dialog maxWidth={"lg"} 
+            sx={{
+                backdropFilter: 'blur(1px)', // Apply blur to the backdrop  
+            }}
+        
+         open={isAddMember}
+        onClose={closeHandler}> 
             <Stack spacing={"rem"}>
                 <DialogTitle>
                     Addmember
                 </DialogTitle>
             </Stack>
             <Stack spacing={"2rem"} p={"rem"}>
-                {data?.transformedFriends?.length>0 ? 
-                    data?.transformedFriends.map((i)=>[
-                        <UserItem user={i} 
-                        isAdded={selectedMembers.includes(i._id)}
-                        handler={selectMemberHandler}></UserItem>
-                    ]) :
-                    <Typography textAlign={"center"}>
+                {data?.friends?.length>0 ? 
+                    data?.friends.map((i)=>{
+                     return  <UserItem user={i} 
+                                isAdded={selectedMembers.includes(i._id)}
+                                handler={selectMemberHandler}>
+
+                                </UserItem>
+                     }) :
+                <Typography textAlign={"center"}>
                         no friends
-                    </Typography>
+                </Typography>
                 }
             </Stack>
-            <Stack direction={"row"} alignItems={"center"}>
+            <Stack direction={"row"} alignItems={"center"} spacing={"1rem"}>
                 <Button variant='contained'
                 onClick={addMemberSubmitHandler}
                 >Submit changes</Button>

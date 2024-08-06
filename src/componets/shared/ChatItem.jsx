@@ -4,7 +4,7 @@ import { Box, Stack, Typography } from "@mui/material";
 import AvatarCard from "./AvatarCard";
 import { motion } from "framer-motion";
 import {useSelector} from "react-redux"
-
+import { Link } from "react-router-dom";
 const ChatItem = ({
   avatar = [],
   name,
@@ -21,30 +21,26 @@ const ChatItem = ({
   
   return (
     <LinkComponent
-      sx={{
-        padding: "0",
-      }}
       to={`/chats/${_id}`}
       onContextMenu={(e) => handleDeleteChat(e, _id, groupChat)}
     >
       <motion.div
-        initial={{ opacity: 0, y: "-100%" }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 * index }}
-        style={{
-          display: "flex",
-          gap: "1rem",
-          alignItems: "center",
-          backgroundColor: sameSender ? "#054640" : "unset",
-          color: sameSender ? "white" : "unset",
-          position: "relative",
-          padding: "1rem",
-          marginBottom: "2px",
-          borderBottom:"1px solid",
-          borderBottomColor:"lightgrey",
-          // boxShadow:" 0 2px 4px rgba(0, 0, 0, 0.1)"
-          wordBreak:"break-word"
-        }}
+      initial={{ opacity: 0, y: '-100%' }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.1 * index }}
+      style={{
+        display: 'flex',
+        gap: '1rem',
+        alignItems: 'center',
+        backgroundColor: sameSender ? '#054640' : 'unset',
+        color: sameSender ? 'white' : 'unset',
+        position: 'relative',
+        padding: '1rem',
+        marginBottom: '2px',
+        borderBottom: '1px solid',
+        borderBottomColor: 'lightgrey',
+        wordBreak: 'break-word',
+      }}
       >
         <AvatarCard avatar={avatar} />
 

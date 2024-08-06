@@ -19,9 +19,9 @@ const NotificationsDialog = () => {
     try {
       const res = await AcceptRequest({RequestId:_id ,accept})
       
-      if(res.data?.success){
-        console.log("use socket")
-        toast.success(res.data.message)
+      if(res?.data?.success){
+        
+        toast.success(res?.data?.message)
       }else{
         console.log(res)
       }

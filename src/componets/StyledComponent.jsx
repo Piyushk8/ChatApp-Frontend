@@ -18,7 +18,8 @@ export const LinkComponent = styled(Link)`
 text-decoration:none;
 color:black;
 &:hover{
-background-color:#f0f0f0}
+background-color:whitesmoke}
+
 }
 `
 
@@ -31,6 +32,7 @@ padding: 1rem ;
 border-radius : 0.5;
 background-color: ${"white"};
 label:Text;
+
 }
 `
 const BouncingAnimation = keyframes`

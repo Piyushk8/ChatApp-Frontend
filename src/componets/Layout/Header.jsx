@@ -12,6 +12,7 @@ import toast from 'react-hot-toast';
 import { server } from '../../constant/config';
 import { useDispatch, useSelector } from 'react-redux';
 import { setIsMobile, setIsNewGroup, setIsNotification, setIsSearch } from '../../redux/reducer/misc';
+import { userNotExists } from '../../redux/reducer/auth'; 
 import { resetNotificationCount } from '../../redux/reducer/chat';
 const SearchD = lazy (()=>import ("../specific/SearchD"))
 const NotificationsDialog = lazy (()=>import ("../specific/Notifications"))
@@ -43,9 +44,10 @@ const LogoutHandler = ()=>{
     withCredentials:true
   })
   .then((res)=>{console.log(res)
-  toast.success(res.data.message)    
+  dispatch(userNotExists());
+  toast.success(res?.data?.message)    
   })
-  .catch((res)=>toast.error(res.data.message))
+  .catch((res)=>console.log(res))
 }
  
   const {isNewGroup,isSearch , isNotification} = useSelector((state)=>state.misc)

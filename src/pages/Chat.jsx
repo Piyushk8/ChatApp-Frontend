@@ -1,15 +1,14 @@
-import React,{useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import React,{useCallback, useEffect,  useRef, useState} from 'react'
 import AppLayout from '../componets/Layout/AppLayout'
 import { IconButton, Skeleton, Stack } from '@mui/material';
 import { AttachFile as AttachFileIcon , Send as SendIcon } from '@mui/icons-material';
 import { InputBox} from '../componets/StyledComponent';
 import FileMenu from '../componets/Dialog.jsx/FileMenu';
-import { SampleMessage } from '../constant/SampleData';
 import MessageComponent from '../componets/shared/MessageComponent';
 import { getSocket } from '../socket';
 import { ALERT, IS_TYPING, NEW_MESSAGE, STOP_TYPING } from '../constant/events';
 import { useChatDetailsQuery, useGetMessagesQuery } from '../redux/api/api';
-import {useSocketEvents} from "../hooks/hook"
+import {useErrors, useSocketEvents} from "../hooks/hook"
 import {useInfiniteScrollTop} from "6pp"
 import { useDispatch } from 'react-redux';
 import { setIsFileMenu } from '../redux/reducer/misc';
@@ -17,6 +16,7 @@ import { removeNewMessagesAlert } from '../redux/reducer/chat';
 import { TypingLoader } from '../componets/Loaders/Layoutloader';
 import { useNavigate } from 'react-router-dom';
 //const socket= io("http://localhost:3000",{withCredentials:true ,  upgrade: false, transports: ['websocket'], reconnection: true, forceNew: false})
+
 const Chat = ({chatId , user}) => {
   const dispatch = useDispatch();
   const nav = useNavigate("")
@@ -62,7 +62,7 @@ useEffect(()=>{
     setMessages([]);
     setMessage("");
     setOldMessages([]);
-    setPage(1)
+    setPage(1);
   }
 },[chatId])
 
@@ -70,11 +70,9 @@ useEffect(()=>{
 if(bottomRef.current) bottomRef.current.scrollIntoView({behavior:"smooth"})
 },[messages])
 
-  useEffect(()=>{
-    if(!chatDetails?.data?.chat) return nav("/")
-  },[])
+ 
 
-  //All Handlers
+  //!All Handlers
   const handleFileOpen = (e)=>{
     e.preventDefault();
     dispatch(setIsFileMenu(true))
@@ -104,7 +102,7 @@ if(bottomRef.current) bottomRef.current.scrollIntoView({behavior:"smooth"})
 
     }
   
-  //Event listner handlers
+  //!Event listner handlers
   const isTypingListener = useCallback((data) => {
     if (data.chatId !== chatId) return;
     setUsertyping(true)
@@ -146,7 +144,7 @@ if(bottomRef.current) bottomRef.current.scrollIntoView({behavior:"smooth"})
     }
   useSocketEvents(socket,eventHandlers)
 
-  // useErrors(errors)
+   useErrors(errors)
 
 return  chatDetails.isLoading ? <Skeleton sx={{height:"50vh"}}/> : (<>
     <Stack ref={containerRef}
