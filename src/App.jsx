@@ -19,7 +19,7 @@ const Group2 = lazy(() => import("./pages/group2"));
 
 const App = () => {
   
-  const { user, loader } = useSelector((state) => state.auth);
+  const { user, Loader } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
 
@@ -27,15 +27,14 @@ const App = () => {
     
     axios
       .get(`${server}/api/v1/user/me`, { withCredentials: true })
-      .then(({ data }) =>{ console.log('profile fetch') ; 
-        return dispatch(userExists(data.user))})
+      .then(({ data }) => dispatch(userExists(data.user)))
 
       .catch((err) => dispatch(userNotExists())
         );
         
   }, [dispatch]);
 
-  return loader ? (
+  return Loader ? (
     <LayoutLoader />
   ) : (
     <BrowserRouter>
