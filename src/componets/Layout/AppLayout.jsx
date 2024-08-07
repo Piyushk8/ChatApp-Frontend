@@ -31,6 +31,7 @@ const AppLayout = () => (WrappedComponent) => {
     const {isMobile } = useSelector((state)=>state.misc)
     const {user} = useSelector((state)=>state.auth)
     const {newMessagesAlert} = useSelector((state)=>state.chat)
+    // console.log(newMessagesAlert)
     const [onlineUsers, setonlineUsers] = useState([])
     
     // console.log(data) to check for chats incoming
@@ -49,6 +50,7 @@ const AppLayout = () => (WrappedComponent) => {
 
     //These Are event listen Handler
     const newRequestHandler = useCallback(()=>{
+      console.log("Incremnt request sent")
       dispatch(incrementNotification())
     },[dispatch])
     
@@ -78,10 +80,11 @@ const AppLayout = () => (WrappedComponent) => {
     
     }
     useSocketEvents(socket,eventHandlers)
-
     //All Items to Load on Page Load
     useEffect(()=>{
       getOrSaveFromStorage({key:NEW_MESSAGE_ALERT,value:newMessagesAlert})
+      
+      
     },[newMessagesAlert])
 
   return (

@@ -9,7 +9,7 @@ const NotificationsDialog = () => {
   const dispatch = useDispatch();
   //states
   const {isNotification}  = useSelector((state)=>state.misc)
-
+  
   //RTK api calls 
   const {data , isloading} = useGetNotificationsQuery();
   const [AcceptRequest] = useAcceptFriendRequestMutation();

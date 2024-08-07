@@ -1,9 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { getOrSaveFromStorage } from "../../lib/features";
-import { NEW_MESSAGE_ALERT } from "../../constant/events";
+import { NEW_MESSAGE_ALERT, NEW_REQUEST } from "../../constant/events";
 
 const initialState = {
-  notificationCount: 0,
+  //notificationCount: 0,
+  notificationCount:getOrSaveFromStorage({
+    key:NEW_REQUEST,get:true
+  }) || {
+    Count:0
+  }
+  
+  
+  ,
   newMessagesAlert: getOrSaveFromStorage({
     key: NEW_MESSAGE_ALERT,
     get: true,
@@ -13,21 +21,34 @@ const initialState = {
       count: 0,
     },
   ],
-  // newMessagesAlert:[{
-  //   chatId: "",
-  //   count: 0,
-  // }]
+  
 };
 
 const chatSlice = createSlice({
   name: "chat",
   initialState,
   reducers: {
+    // incrementNotification: (state) => {
+    //   state.notificationCount += 1;
+    // },
+    // resetNotificationCount: (state) => {
+    //   state.notificationCount = 0;
+    // },
     incrementNotification: (state) => {
-      state.notificationCount += 1;
+      state.notificationCount.Count += 1;
+      getOrSaveFromStorage({
+        key: NEW_REQUEST,
+        value: state.notificationCount,
+        get: false,
+      }); // Save to local storage
     },
     resetNotificationCount: (state) => {
-      state.notificationCount = 0;
+      state.notificationCount.Count = 0;
+      getOrSaveFromStorage({
+        key: NEW_REQUEST,
+        value: state.notificationCount,
+        get: false,
+      }); // Save to local storage
     },
 
     setNewMessagesAlert: (state, action) => {

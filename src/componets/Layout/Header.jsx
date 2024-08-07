@@ -1,6 +1,6 @@
-import React, { useState  ,lazy, Suspense} from 'react'
+import React, { useState  ,lazy, Suspense, useEffect} from 'react'
 import {useNavigate} from "react-router-dom"
-import { AppBar ,Badge,Box, IconButton, Toolbar, Tooltip, Typography } from '@mui/material'
+import { AppBar ,Badge,Box, CircularProgress, IconButton, Toolbar, Tooltip, Typography } from '@mui/material'
 import { orange } from '@mui/material/colors'
 import MenuIcon from '@mui/icons-material/Menu';
 import Search  from '@mui/icons-material/Search';
@@ -14,6 +14,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setIsMobile, setIsNewGroup, setIsNotification, setIsSearch } from '../../redux/reducer/misc';
 import { userNotExists } from '../../redux/reducer/auth'; 
 import { resetNotificationCount } from '../../redux/reducer/chat';
+import { getOrSaveFromStorage } from '../../lib/features';
+import { NEW_REQUEST } from '../../constant/events';
+import { useGetNotificationsQuery } from '../../redux/api/api';
 const SearchD = lazy (()=>import ("../specific/SearchD"))
 const NotificationsDialog = lazy (()=>import ("../specific/Notifications"))
 const NewGroup = lazy (()=>import ("../specific/NewGroup"))
@@ -21,6 +24,7 @@ const Header = () => {
   const dispatch = useDispatch();
   const nav = useNavigate();
 
+  
   //all Handler function
   const handleMobile= ()=>{
     dispatch(setIsMobile(true))    
@@ -52,7 +56,7 @@ const LogoutHandler = ()=>{
  
   const {isNewGroup,isSearch , isNotification} = useSelector((state)=>state.misc)
   const {notificationCount} = useSelector((state)=>state.chat)
-  
+
   
   
   const IconBtn = ({title , icon , onClick ,value})=>{
@@ -67,7 +71,10 @@ const LogoutHandler = ()=>{
     </Tooltip>
     )
   }
-
+  useEffect(()=>{
+    getOrSaveFromStorage({key:NEW_REQUEST,value:notificationCount})
+  },[notificationCount])
+//!only online users can get friend request for now
   return (
     <>
      <Box sx={{flexgrow:1}} height={"4rem"} >
@@ -107,7 +114,7 @@ const LogoutHandler = ()=>{
       <IconBtn
         title={"Notifications"}
         icon={<NotificationIcon/>}
-        value={notificationCount}
+        value={notificationCount?.Count}
         onClick={OpenNotificationDialog}/>
         
   
@@ -115,13 +122,13 @@ const LogoutHandler = ()=>{
       </AppBar>
       </Box> 
 {
-  isSearch && <Suspense fallback="Loading"><SearchD/></Suspense>
+  isSearch && <Suspense fallback=""><SearchD/></Suspense>
 }
 {
-  isNotification && <Suspense fallback="Loading"><NotificationsDialog/></Suspense>
+  isNotification && <Suspense fallback=""><NotificationsDialog/></Suspense>
 }
 {
-  isNewGroup && <Suspense fallback="Loading"><NewGroup/></Suspense>
+  isNewGroup && <Suspense fallback={<CircularProgress/>}><NewGroup/></Suspense>
 }
     </>
   )

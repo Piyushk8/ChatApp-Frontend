@@ -10,49 +10,47 @@ import { useDispatch , useSelector} from 'react-redux';
 import { userExists } from '../redux/reducer/auth';
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
+
 function Login() {
   const dispatch = useDispatch();
   const nav = useNavigate("/")
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+    const handleLogin = async(e)=>{
+      e.preventDefault()
+      const toastId = toast.loading("Logging In...");
 
-    const toastId = toast.loading("Logging In...");
-
-    setIsLoading(true);
-    const config = {
-      withCredentials: true,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-
-    try {
-      const { data } = await axios.post(
-        `${server}/api/v1/user/login`,
-        {
-          username: username.value,
-          password: password.value,
+      setIsLoading(true);
+      const config = {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
         },
-        config
-      );
-    
-      dispatch(userExists(data.user));
-      toast.success(data.message, {
-        id: toastId,
-      });
-    } catch (error) {
-      toast.error(error?.response?.data?.message || "Something Went Wrong", {
-        id: toastId,
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-
+      };
+  
+      try {
+        const { data } = await axios.post(
+          `${server}/api/v1/user/login`,
+          {
+            username: username.value,
+            password: password.value,
+          },
+          config
+        );
+        dispatch(userExists(data.user));
+        toast.success(data.message, {
+          id: toastId,
+        });
+        nav("/")
+      } catch (error) {
+        toast.error(error?.response?.data?.message || "Something Went Wrong", {
+          id: toastId,
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
     const handleSignUp = (e)=>{
         e.preventDefault();
 
@@ -68,9 +66,7 @@ function Login() {
           headers: {
             "Content-Type": "multipart/form-data" // Ensure the Content-Type is set correctly for FormData
           }
-        }).then((res)=>{toast.success(res.data.message)
-        nav("/")}
-      )
+        }).then((res)=>toast.success(res.data.message))
           .catch((err)=>toast.error(err.response.data.message))
           }
 
