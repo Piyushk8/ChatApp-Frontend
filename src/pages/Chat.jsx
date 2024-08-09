@@ -17,6 +17,7 @@ import { TypingLoader } from '../componets/Loaders/Layoutloader';
 import { useNavigate } from 'react-router-dom';
 
 const Chat = ({chatId , user}) => {
+  
   const dispatch = useDispatch();
   const nav = useNavigate("")
   const [message,setMessage] = useState("");//states
@@ -32,44 +33,48 @@ const Chat = ({chatId , user}) => {
   const bottomRef = useRef(null)
 
   const socket = getSocket();
- 
+  
   
   //chat queries
-  const chatDetails = useChatDetailsQuery({chatId ,skip: !chatId})
+  const chatDetails = useChatDetailsQuery({chatId , skip:!chatId})
+
+  const {data:oldMessagesQuery,isError:oldMessageisError
+    ,error:oldMessageError,isLoading:isLoadingOldchats
+  } = useGetMessagesQuery({chatId , page})
+
   const members = chatDetails?.data?.chat?.members;
   //message history query
-  const oldMessagesQuery = useGetMessagesQuery({chatId , page})
   //const oldMessages = oldMessagesQuery?.data?.message;
   const totalPages = oldMessagesQuery?.data?.totalPages
 
   const {data:oldMessages , setData:setOldMessages} = useInfiniteScrollTop(
     containerRef,
-    oldMessagesQuery?.data?.totalPages,
+    oldMessagesQuery?.totalPages,
     page,
     setPage,
-    oldMessagesQuery?.data?.message 
+    oldMessagesQuery?.message 
   )
-  
-  //const allMessages = [...oldMessages?.data?.message,...messages]
+
   const errors = [
     {isError:oldMessages.isError , error:oldMessages.error},
     {isError:chatDetails.isError ,error:chatDetails.error}]
   
-useEffect(()=>{
-  socket.emit(CHAT_JOINED,{userId:user._id,members})
-  dispatch(removeNewMessagesAlert(chatId))
-  return()=>{
-    setMessages([]);
-    setMessage("");
-    setOldMessages([]);
-    setPage(1);
-    socket.emit(CHAT_LEFT,{userId:user._id,members})
-  }
-},[chatId])
+  useEffect(()=>{
+    socket.emit(CHAT_JOINED,{userId:user._id,members})
+    dispatch(removeNewMessagesAlert(chatId))
+  
+    return()=>{
+      setMessages([]);
+      setMessage("");
+      setOldMessages([]);
+      setPage(1);
+      socket.emit(CHAT_LEFT,{userId:user._id,members})
+    }
+  },[chatId])
 
-useEffect(()=>{
-if(bottomRef.current) bottomRef.current.scrollIntoView({behavior:"smooth"})
-},[messages])
+  useEffect(()=>{
+  if(bottomRef.current) bottomRef.current.scrollIntoView({behavior:"smooth"})
+  },[messages])
 
  
 
@@ -121,8 +126,8 @@ if(bottomRef.current) bottomRef.current.scrollIntoView({behavior:"smooth"})
     if (data.chatId !== chatId) return;
     // Safely update messages state
     setMessages((prevMessages) => [...prevMessages, data.message]);
-    }, [chatId]);
-    
+  }, [chatId]);
+  
   const AlertListener = useCallback((content) => {
     if (data.chatId !== chatId) return;
     const messageForAlert = {
@@ -135,19 +140,18 @@ if(bottomRef.current) bottomRef.current.scrollIntoView({behavior:"smooth"})
       createdAt:new Date().toISOString(),
     }
   }, [chatId]);
-    
+      
 
-    const eventHandlers = {
-     [ALERT] : AlertListener,
-     [NEW_MESSAGE]:newMessagesListener,
-     [IS_TYPING]:isTypingListener,
-     [STOP_TYPING]:stopTypingListener
-    }
+  const eventHandlers = {
+    [ALERT] : AlertListener,
+    [NEW_MESSAGE]:newMessagesListener,
+    [IS_TYPING]:isTypingListener,
+    [STOP_TYPING]:stopTypingListener
+  }
   useSocketEvents(socket,eventHandlers)
+  useErrors(errors)
 
-   useErrors(errors)
-
-return  chatDetails.isLoading ? <Skeleton sx={{height:"50vh"}}/> : (<>
+return  chatDetails.isLoading && isLoadingOldchats ? <Skeleton sx={{height:"50vh"}}/> : (<>
     <Stack ref={containerRef}
       boxSizing={"border-box"}
       padding={"1rem"}
@@ -170,7 +174,11 @@ return  chatDetails.isLoading ? <Skeleton sx={{height:"50vh"}}/> : (<>
           return <MessageComponent key={i._id} message={i} user={user}></MessageComponent>
         })
       }
-
+{/* {
+  allMessages?.map((i)=>{
+    return <MessageComponent key={i._id} message={i} user={user}/>
+  })
+} */}
       {
         Usertyping && <TypingLoader/>
       }

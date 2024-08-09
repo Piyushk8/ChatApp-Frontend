@@ -148,15 +148,12 @@ const Group2 = () => {
     
     useEffect(() => {
       const groupData = groupDetails;
-      if(myGroups) console.log("mygroups")
       if (groupData) {
-        console.log("Group data chnaged")
         setGroupName(groupData?.chat?.name);
         setGroupNameUpdatedValue(groupData?.chat?.name);
         setMembers(groupData.chat.members);
       }
-      console.log("mygroups",myGroups)
-      console.log("groupsDetails",groupDetails)
+    
       
       return () => {
         setGroupName("");

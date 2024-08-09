@@ -61,6 +61,7 @@ const api = createApi({
                 url:`chat/message/${chatId}?page=${page}`,
                 credentials:"include"
             }),
+            keepUnusedDataFor: 0,
             providesTags:["message"],
         }),
         sendAttachments:builder.mutation({
@@ -78,6 +79,7 @@ const api = createApi({
                 credentials:"include"
             }),
             providesTags:["Chat"],
+            keepUnusedDataFor: 0,
         }),
         availableFriends:builder.query({
             query:(chatId)=>{

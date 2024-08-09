@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { lazy, useCallback, useEffect, useRef, useState } from 'react'
 import Header from './Header'
 import Title from "../shared/Title"
 import {Drawer, Grid, Skeleton} from "@mui/material"
@@ -13,7 +13,7 @@ import { CHAT_JOINED,CHAT_LEFT,NEW_MESSAGE, NEW_MESSAGE_ALERT, NEW_REQUEST, ONLI
 import { useSocketEvents } from '../../hooks/hook';
 import { incrementNotification, setNewMessagesAlert } from '../../redux/reducer/chat';
 import { getOrSaveFromStorage } from '../../lib/features';
-import DeleteChatMenu from '../Dialog.jsx/deleteChatMenu';
+const DeleteChatMenu = lazy(()=>import('../Dialog.jsx/deleteChatMenu')) 
 
 
 
@@ -31,15 +31,13 @@ const AppLayout = () => (WrappedComponent) => {
     const {isMobile } = useSelector((state)=>state.misc)
     const {user} = useSelector((state)=>state.auth)
     const {newMessagesAlert} = useSelector((state)=>state.chat)
-    // console.log(newMessagesAlert)
     const [onlineUsers, setonlineUsers] = useState([])
     
-    // console.log(data) to check for chats incoming
     //All Handlers 
     const handleDeleteChat = (e ,_id , groupChat)=>{
       e.preventDefault()
       deleteOptionAnchor.current = e.currentTarget;
-      console.log(deleteOptionAnchor.current)
+      
       dispatch(setIsDeleteMenu(true))
       dispatch(setSelectedDeleteChat({chatId,_id,groupChat}))
     };
@@ -50,7 +48,6 @@ const AppLayout = () => (WrappedComponent) => {
 
     //These Are event listen Handler
     const newRequestHandler = useCallback(()=>{
-      console.log("Incremnt request sent")
       dispatch(incrementNotification())
     },[dispatch])
     
@@ -64,7 +61,6 @@ const AppLayout = () => (WrappedComponent) => {
     },[refetch])
 
     const refetchChatHandler = useCallback(()=>{
-      console.log("refetch")
       refetch()
     },[refetch]) 
 
@@ -82,9 +78,7 @@ const AppLayout = () => (WrappedComponent) => {
     useSocketEvents(socket,eventHandlers)
     //All Items to Load on Page Load
     useEffect(()=>{
-      getOrSaveFromStorage({key:NEW_MESSAGE_ALERT,value:newMessagesAlert})
-      
-      
+      getOrSaveFromStorage({key:NEW_MESSAGE_ALERT,value:newMessagesAlert})      
     },[newMessagesAlert])
 
   return (

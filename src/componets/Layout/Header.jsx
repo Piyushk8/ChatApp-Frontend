@@ -47,11 +47,11 @@ const LogoutHandler = ()=>{
   axios.get(`${server}/api/v1/user/logout`,{
     withCredentials:true
   })
-  .then((res)=>{console.log(res)
+  .then((res)=>{
   dispatch(userNotExists());
   toast.success(res?.data?.message)    
   })
-  .catch((res)=>console.log(res))
+  .catch((res)=>toast.error(res?.data?.err?.message))
 }
  
   const {isNewGroup,isSearch , isNotification} = useSelector((state)=>state.misc)

@@ -21,7 +21,6 @@ const DeleteChatMenu = ({dispatch , deleteOptionAnchor}) => {
 
     const LeaveGroup = ()=>{
         closeHandler();
-        console.log(selectedDeleteChat)
         leaveGroup("Group Left",{id:selectedDeleteChat._id})
         
         
@@ -29,7 +28,6 @@ const DeleteChatMenu = ({dispatch , deleteOptionAnchor}) => {
     const Unfriend = ()=>{
         
         closeHandler();
-        console.log(selectedDeleteChat)
         deleteChat("Removed",{id:selectedDeleteChat._id})
     }
     useEffect(()=>{
