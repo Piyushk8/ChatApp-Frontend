@@ -1,7 +1,7 @@
 import React, { lazy, useCallback, useEffect, useRef, useState } from 'react'
 import Header from './Header'
 import Title from "../shared/Title"
-import {Drawer, Grid, Skeleton} from "@mui/material"
+import {Box, Drawer, Grid, Skeleton} from "@mui/material"
 import ChatList from '../specific/ChatList';
 import { useNavigate, useParams } from 'react-router-dom';
 import Profile from '../specific/Profile';
@@ -85,16 +85,19 @@ const AppLayout = () => (WrappedComponent) => {
         <>
         <Title title='Chat App ' description='Hey!'></Title>
         <Header></Header>
-        <DeleteChatMenu  dispatch={dispatch} deleteOptionAnchor={deleteOptionAnchor}/>
 
+        <DeleteChatMenu  dispatch={dispatch} deleteOptionAnchor={deleteOptionAnchor}/>
+{/* this is chat list drawer for small screens */}
         {
           isLoading ?
           <Skeleton/> 
                   : 
           <Drawer onClose={handleMobileClose}
-            open={isMobile}>
+            open={isMobile}
+            sx={{lg:{handleMobileClose}}}
+            >
              <ChatList 
-             w="70vw"
+             w="50vw"
              chats={data?.transformedChats} chatId={chatId} 
             newMessagesAlert={newMessagesAlert}
             onlineUsers={onlineUsers}
@@ -103,12 +106,27 @@ const AppLayout = () => (WrappedComponent) => {
             />
           </Drawer>
         }
+      {/* main grid */}
+      <Box 
+        sx={{
+          height:"calc(100vh - 5rem)",
+          //backgroundImage: 'url(https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png)',  // Replace with your image URL
+          backgroundSize: 'cover',    // Cover the entire box
+          backgroundPosition: 'center',  // Center the image
+          backgroundRepeat: 'no-repeat',  // Prevent the image from repeating
+        }}
+      >
+
         <Grid container  sx={{
-          height: 'calc(100vh - 5rem)',
+          bgcolor:'',
+          marginLeft:{lg:'2rem'},
+          height: 'calc(100vh - 4rem)',
+          width:{lg:"95%"},
+          
           overflow: 'hidden',
         }}> 
 
-          <Grid item sm={4} md={3}  sx={{display:{xs:"none" , sm:"block"}}}  height={"100%"} >
+          <Grid item sm={4} md={4}  sx={{display:{xs:"none" , sm:"block"}}}  height={"100%"} >
            {
             isLoading ? <Skeleton></Skeleton> : 
             <ChatList 
@@ -123,16 +141,16 @@ const AppLayout = () => (WrappedComponent) => {
                {/* </ChatList> */}
           </Grid>
         {/* {mainBody} */}
-          <Grid item xs={12} sm={8}  md={5} bgcolor="#F0F0F0"  lg={6} height={"100%"} >
+          <Grid item xs={12} sm={8} md={8}  bgcolor="#F0F0F0"  height={"100%"} >
           <WrappedComponent {...props} user={user}  chatId={chatId} />
           </Grid>
         
-          <Grid item md={4} lg={3}
+          {/* <Grid item md={4} lg={3}
            sx={{display:{xs:"none",md:"block"} , 
            padding:"2rem"}}
-            bgcolor="#009688" height={"100%"} ><Profile user={user}/> </Grid>
+            bgcolor="#009688" height={"100%"} ><Profile user={user}/> </Grid> */}
         </Grid>
-
+        </Box>
         
             
         </>

@@ -15,6 +15,8 @@ import { setIsFileMenu } from '../redux/reducer/misc';
 import { removeNewMessagesAlert } from '../redux/reducer/chat';
 import { TypingLoader } from '../componets/Loaders/Layoutloader';
 import { useNavigate } from 'react-router-dom';
+import chatBackground from "../assets/chatBackground.webp"
+import darkChatBackground from "../assets/darkChatBackground.webp"
 
 const Chat = ({chatId , user}) => {
   
@@ -159,6 +161,9 @@ return  chatDetails.isLoading && isLoadingOldchats ? <Skeleton sx={{height:"50vh
       bgcolor={"white"}
       height={"90%"}
       sx={{
+        backgroundImage: `url(${chatBackground})`, 
+              // backgroundImage: `url(${darkChatBackground})`,  // Replace with your image URL
+          
         overflowX:"hidden",
         overflowY:"auto"
       }}>

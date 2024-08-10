@@ -41,32 +41,52 @@ const NewGroup = () => {
     useErrors(errors)
   return (
     <Dialog open={isNewGroup} fullWidth onClose={CloseHandler}>
-    <Stack spacing={"2rem"} p={{xs:"1rem" , sm:"2rem"}} maxWidth={"40rem"}>
-    <DialogTitle>
-     New Group
-    </DialogTitle>
+      <Stack spacing={"2rem"} p={{xs:"1rem" , sm:"2rem"}} maxWidth={"40rem"}>
+        <DialogTitle
+          sx={{alignSelf:"center",
+            color:'grey',
+            font:"menu"
+            ,fontSize:"1.3rem"
+          }}
+        >
+        New Group
+        </DialogTitle>
 
-    <TextField label="" value={groupName.value} onChange={groupName.changeHandler}></TextField>
-    <Typography textAlign={"center"} variant='body1'>Members </Typography>
-    
-    <Stack maxWidth={"40rem"} p={{md:"2rem"}}>
-      {
-        isLoading ? <Skeleton/> : (data?.friends.map((i) => (
-          <UserItem
-            user={i}
-            key={i._id}
-            handler={selectMemberHandler}
-            isAdded={selectedMembers.includes(i._id)}  
-          />)))
-      }
+        <TextField placeholder='Group Name here....'
+           value={groupName.value}
+          onChange={groupName.changeHandler}
+          sx={{bgcolor:'#f5f5f5'}}
+          ></TextField>
+        <Typography pl={"2rem"} variant='body1'
+          sx={{font:"menu",fontSize:{sm:"1rem",md:"1.5rem"}
+          }}  
+        >Add Members </Typography>
         
-    </Stack >
-        <Stack direction={"row"} justifyContent={"space-around"}> 
-            <Button size='large' variant={"text"} color="error" onClick={CloseHandler} disabled={groupLoading}> Cancel</Button>
-            <Button size="large" variant={"contained"} onClick={submitHandler} disabled={groupLoading}>Create</Button>
-        </Stack>
+        <Stack maxWidth={"40rem"} p={{md:"2rem"}}>
+          {
+            isLoading ? <Skeleton/> : (data?.friends.map((i) => (
+              <UserItem
+                user={i}
+                key={i._id}
+                handler={selectMemberHandler}
+                isAdded={selectedMembers.includes(i._id)}  
+              />)))
+          }
+            
+        </Stack >
+            <Stack direction={"row"} justifyContent={"space-around"}> 
+                <Button size='large' variant={"text"} color="error" onClick={CloseHandler} disabled={groupLoading}> Cancel</Button>
+                <Button 
+                sx={{ 
+                  bgcolor: '#215C54', 
+                  '&:hover': { 
+                    bgcolor: '#1b4a44'  
+                  } 
+                }}
+                 size="large" variant={"contained"} onClick={submitHandler} disabled={groupLoading}>Create</Button>
+            </Stack>
 
-    </Stack>
+      </Stack>
 
 
   </Dialog>

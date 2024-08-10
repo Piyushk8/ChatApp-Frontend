@@ -13,7 +13,7 @@ const MessageComponent = ({user,message }) => {
   return (
     <div style={{
         alignSelf:sameSender? "flex-end":"flex-start",
-        backgroundColor:sameSender? "#aaaaaa":"	#bbbbbb",
+        backgroundColor:sameSender? "white":"whitesmoke",
         color:"black",
         borderRadius:"0 10px 0 10px" ,
         padding:"0.5rem"

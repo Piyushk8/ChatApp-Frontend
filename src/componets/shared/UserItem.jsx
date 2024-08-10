@@ -16,7 +16,7 @@ const UserItem = ({ user, handler, handlerIsLoading, isAdded = false, styling = 
         >
           <Avatar src={transformImage(avatar.url)} />
           <Typography
-            sx={{
+            sx={{font:"menu", fontSize:"1rem",
               flexGrow: 1,
               display: '-webkit-box',
               WebkitLineClamp: 1,
@@ -29,19 +29,19 @@ const UserItem = ({ user, handler, handlerIsLoading, isAdded = false, styling = 
           </Typography>
           <IconButton
             sx={{
-              bgcolor: isAdded ? 'error.main' : 'primary.main',
+              bgcolor: isAdded ? 'error.main' : '#215C54',
               color: 'white',
               '&:hover': {
-                bgcolor: isAdded ? 'error.main' : 'primary.dark',
+                bgcolor: isAdded ? 'error.main' : "darkgreen",
               },
-              width: '40px', // Fix width
-              height: '40px', // Fix height
+              width: '30px', // Fix width
+              height: '30px', // Fix height
             }}
             
             onClick={() => handler(_id)}
             disabled={handlerIsLoading}
           >
-            {isAdded ? <RemoveIcon /> : <AddIcon />}
+            {isAdded ? <RemoveIcon /> : <AddIcon color='darkgreen' />}
           </IconButton>
         </Stack>
       </ListItem>

@@ -1,8 +1,8 @@
-import { Menu, Stack, Typography } from '@mui/material'
+import { Box, Menu, Stack, Typography } from '@mui/material'
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { setIsDeleteMenu } from '../../redux/reducer/misc'
-import { Delete, ExitToApp } from '@mui/icons-material'
+import { Delete, DoneAllSharp, ExitToApp, PushPin } from '@mui/icons-material'
 import { useAsyncMutation } from '../../hooks/hook'
 import { useDeleteChatMutation, useLeaveGroupMutation } from '../../redux/api/api'
 import { useNavigate } from 'react-router-dom'
@@ -43,31 +43,44 @@ const DeleteChatMenu = ({dispatch , deleteOptionAnchor}) => {
      anchorEl={deleteOptionAnchor.current}
      transformOrigin={{vertical:"center",horizontal:"center"}}>
      
-        <Stack
-         sx={{
-            width:"7rem",
-            padding:"0.5rem",
-            cursor:"pointer",
-            color:"grey",
-            boxSizing:"border-box"
-            
-        }}
-        direction={"row"}
-        alignItems={"center"}
-        spacing={"0.5rem"}
-        onClick={selectedDeleteChat.groupChat?LeaveGroup:Unfriend}
+     <Stack
+            sx={{
+                width: "10rem",  // Adjusted width for better layout
+                padding: "0.5rem",
+                cursor: "pointer",
+                color: "grey",
+                boxSizing: "border-box",
+            }}
+            spacing={"0.5rem"}
         >
-        {
-            selectedDeleteChat.groupChat ? <><ExitToApp/>
-            <Typography>Leave Group</Typography>
-            </> :
-            <><Delete/>
-            <Typography>Remove</Typography>
-            </> 
-        }
+            <Box
+            onClick={selectedDeleteChat.groupChat?LeaveGroup:Unfriend}
+            display={"flex"} alignItems={"center"} gap={"0.5rem"}>
+                {selectedDeleteChat.groupChat ? (
+                    <>
+                        <ExitToApp  fontSize='extrasmall'/>
+                        <Typography>Leave Group</Typography>
+                    </>
+                ) : (
+                    <>
+                        <Delete fontSize='extrasmall' />
+                        <Typography>Remove</Typography>
+                    </>
+                )}
+            </Box>
+            <Box display={"flex"} alignItems={"center"} gap={"0.5rem"}>
+                <PushPin fontSize='extrasmall' />
+                <Typography>Pin Chat</Typography>
+            </Box>
+            <Box display={"flex"} alignItems={"center"} gap={"0.5rem"}>
+                <DoneAllSharp fontSize='extrasmall'/>
+                <Typography>Mark as Read</Typography>
+            </Box>
         </Stack>
     </Menu>
   )
 }
 
 export default DeleteChatMenu
+
+//onClick={selectedDeleteChat.groupChat?LeaveGroup:Unfriend}

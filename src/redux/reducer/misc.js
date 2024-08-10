@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  isProfile:false,
   isNewGroup:false,
   isAddMember: false,
   isNotification: false,
@@ -46,6 +47,9 @@ const miscSlice = createSlice({
     setSelectedDeleteChat: (state, action) => {
       state.selectedDeleteChat = action.payload;
     },
+    setIsProfile: (state, action) => {
+      state.isProfile = action.payload;
+    },
   },
 });
 
@@ -60,4 +64,5 @@ export const {
   setIsDeleteMenu,
   setUploadingLoader,
   setSelectedDeleteChat,
+  setIsProfile
 } = miscSlice.actions;
