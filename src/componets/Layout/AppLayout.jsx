@@ -94,10 +94,9 @@ const AppLayout = () => (WrappedComponent) => {
                   : 
           <Drawer onClose={handleMobileClose}
             open={isMobile}
-            sx={{lg:{handleMobileClose}}}
             >
              <ChatList 
-             w="50vw"
+             w="65vw"
              chats={data?.transformedChats} chatId={chatId} 
             newMessagesAlert={newMessagesAlert}
             onlineUsers={onlineUsers}
@@ -109,6 +108,7 @@ const AppLayout = () => (WrappedComponent) => {
       {/* main grid */}
       <Box 
         sx={{
+           background: 'linear-gradient(45deg, #fdfbfb 0%, #ebedee 100%)',
           height:"calc(100vh - 5rem)",
           //backgroundImage: 'url(https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png)',  // Replace with your image URL
           backgroundSize: 'cover',    // Cover the entire box
@@ -116,7 +116,7 @@ const AppLayout = () => (WrappedComponent) => {
           backgroundRepeat: 'no-repeat',  // Prevent the image from repeating
         }}
       >
-
+        <Box bgcolor={"red"}> </Box>
         <Grid container  sx={{
           bgcolor:'',
           marginLeft:{lg:'2rem'},

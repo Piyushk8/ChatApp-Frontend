@@ -17,7 +17,9 @@ const ChatList = ({
 }) => {
   // console.log("online",onlineUsers)
   return (
-    <Stack width={w} direction={"column"} overflow={"auto"} height={"100%"}>
+    <Stack 
+      sx={{ background: 'linear-gradient(45deg, #fdfbfb 0%, #ebedee 100%)'}}
+      width={w} direction={"column"} overflow={"auto"} height={"100%"}>
       {chats?.map((data, index) => {
         const { avatar, _id, name, groupChat, members } = data;
        // console.log("members",members)

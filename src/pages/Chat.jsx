@@ -196,7 +196,7 @@ return  chatDetails.isLoading && isLoadingOldchats ? <Skeleton sx={{height:"50vh
       }}
       onSubmit={SubmitHandler}
     >
-      <Stack direction={"row"} height={"90%"} padding={"1rem"}
+      <Stack direction={"row"} height={"90%"} padding={"1rem"} marginBottom={"1rem"}
         position={"relative"}
       >
       <IconButton position="absolute" 
@@ -216,7 +216,8 @@ return  chatDetails.isLoading && isLoadingOldchats ? <Skeleton sx={{height:"50vh
         padding:"0.5rem",
         "&:hover":{
         bgcolor:"error.dark"
-          }
+          },
+          height:"2rem"
         }
       } position="absolute"><SendIcon/></IconButton>
       </Stack>

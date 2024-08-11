@@ -1,7 +1,7 @@
 import React from 'react'
 import AppLayout from '../componets/Layout/AppLayout'
 import { Typography ,Box ,Container, Divider} from '@mui/material';
-import { emptyChatImage } from '../constant/color';
+import  emptyChatImage  from '../assets/emptyChatImage.webp';
 
 function Home() {
   

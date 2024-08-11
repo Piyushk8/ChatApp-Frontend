@@ -40,7 +40,10 @@ const NewGroup = () => {
 
     useErrors(errors)
   return (
-    <Dialog open={isNewGroup} fullWidth onClose={CloseHandler}>
+    <Dialog open={isNewGroup}
+    fullWidth 
+      sx={{}}
+    onClose={CloseHandler}>
       <Stack spacing={"2rem"} p={{xs:"1rem" , sm:"2rem"}} maxWidth={"40rem"}>
         <DialogTitle
           sx={{alignSelf:"center",

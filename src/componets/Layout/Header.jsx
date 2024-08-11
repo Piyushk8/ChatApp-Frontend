@@ -1,12 +1,11 @@
-import React, { useState  ,lazy, Suspense, useEffect, useRef} from 'react'
+import React, { lazy, Suspense, useEffect, useRef} from 'react'
 import {useNavigate} from "react-router-dom"
-import { AppBar ,Avatar,Badge,Box, CircularProgress, IconButton, Toolbar, Tooltip, Typography } from '@mui/material'
-import { orange } from '@mui/material/colors'
+import { AppBar ,Avatar,Badge,Box, CircularProgress, IconButton, Toolbar, Tooltip, Typography, useMediaQuery } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu';
 import Search  from '@mui/icons-material/Search';
 import Add from '@mui/icons-material/Add';
 import Group from '@mui/icons-material/Group';
-import {Logout, Notifications as NotificationIcon} from "@mui/icons-material"
+import { Notifications as NotificationIcon} from "@mui/icons-material"
 import axios from "axios"
 import toast from 'react-hot-toast';
 import { server } from '../../constant/config';
@@ -16,15 +15,19 @@ import { userNotExists } from '../../redux/reducer/auth';
 import { resetNotificationCount } from '../../redux/reducer/chat';
 import { getOrSaveFromStorage } from '../../lib/features';
 import { NEW_REQUEST } from '../../constant/events';
-import { useGetNotificationsQuery } from '../../redux/api/api';
-import ProfileMenu from '../Dialog.jsx/ProfileMenu';
+import  UserAvatar from "../../assets/userAvatar.webp"
+//import { useGetNotificationsQuery } from '../../redux/api/api';
+const ProfileMenu = lazy(()=>import('../Dialog.jsx/ProfileMenu'));
 const SearchD = lazy (()=>import ("../specific/SearchD"))
 const NotificationsDialog = lazy (()=>import ("../specific/Notifications"))
 const NewGroup = lazy (()=>import ("../specific/NewGroup"))
+
+
 const Header = () => {
   const dispatch = useDispatch();
   const nav = useNavigate();
   const profileAnchor = useRef(null)
+
   //all Handler function
   const handleMobile= ()=>{
     dispatch(setIsMobile(true))    
@@ -76,16 +79,20 @@ const LogoutHandler = ()=>{
     </Tooltip>
     )
   }
+
   useEffect(()=>{
     getOrSaveFromStorage({key:NEW_REQUEST,value:notificationCount})
   },[notificationCount])
 //!only online users can get friend request for now
-  return (
+  
+return (
     <>
      <Box sx={{flexgrow:1}} height={"4rem"} >
       <AppBar position='static' sx={{bgcolor:"#215C54"}} >
         <Toolbar>
-          <Typography variant='h6' sx={{display:{xs:"none" , sm:"block"}}}>
+          <Typography
+            onClick={()=>{nav('/')}}
+            variant='h6' sx={{display:{xs:"none" , sm:"block"}}}>
             Chat App
           </Typography>
 
@@ -125,7 +132,7 @@ const LogoutHandler = ()=>{
         <IconButton 
           ref={profileAnchor.current}
           onClick={OpenProfileDialog}>
-        <Avatar>
+        <Avatar src={UserAvatar}>
         </Avatar>
         </IconButton>
 

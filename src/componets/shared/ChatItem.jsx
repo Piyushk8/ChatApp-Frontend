@@ -52,6 +52,7 @@ const ChatItem = ({
         wordBreak: 'break-word',
         
       }}
+      
       >
         <AvatarCard avatar={avatar} />
 
