@@ -1,16 +1,20 @@
 import {
     Add as AddIcon,
+    Cancel,
     Delete as DeleteIcon,
     Done as DoneIcon,
     Edit as EditIcon,
     KeyboardBackspace as KeyboardBackspaceIcon,
     Menu as MenuIcon,
+    Title,
   } from "@mui/icons-material";
   import {
     Backdrop,
     Box,
     Button,
     CircularProgress,
+    Dialog,
+    Divider,
     Drawer,
     Grid,
     IconButton,
@@ -35,7 +39,7 @@ import {
     useRenameGroupMutation,
   } from "../redux/api/api";
   import { setIsAddMember } from "../redux/reducer/misc";
-  
+  import groupList from "../assets/groupList.webp"
   const ConfirmDeleteDialog = lazy(() =>
     import("../componets/Dialog.jsx/ConfirmDeleteDialog")
   );
@@ -59,7 +63,6 @@ const Group2 = () => {
   const {data:myGroups,isError:myGroupsIsError,error:myGroupsError,isLoading:isLoadingMygroups,refetch:refetchMyGroups} = useGetMyGroupsQuery("");
   const {data:groupDetails,isError:groupDetailsIsError,error:groupDetailsError,refetch:refetchGroupDetails} = useChatDetailsQuery({chatId , populate:true},{skip:!chatId})
   const [deleteGroup , isLoadingDeleteGroup] = useAsyncMutation(useDeleteChatMutation)
-  
   const [renameGroup ,isLoadingGroupName ] = useAsyncMutation(useRenameGroupMutation)
   const [removeMember ,isLoadingRemoveMember  ] = useAsyncMutation(useRemoveGroupMemberMutation)
   
@@ -154,7 +157,7 @@ const Group2 = () => {
         setMembers(groupData.chat.members);
       }
     
-      
+      console.log(groupName)
       return () => {
         setGroupName("");
         setGroupNameUpdatedValue("");
@@ -187,7 +190,7 @@ const Group2 = () => {
               position: "absolute",
               top: "2rem",
               left: "2rem",
-              bgcolor:"#1c1c1c",//!color
+              bgcolor:"darkgreen",//!color
               color: "white",
               ":hover": {
                 bgcolor: "rgba(0,0,0,0.7)",
@@ -200,7 +203,7 @@ const Group2 = () => {
         </Tooltip>
       </>
     );
-  
+
     const GroupName = (
       <>
       <Stack
@@ -213,22 +216,33 @@ const Group2 = () => {
         {isEdit ? (
           <>
             <TextField
+              placeholder="Enter new name"
               value={groupNameUpdatedValue}
               onChange={(e) => setGroupNameUpdatedValue(e.target.value)}
             />
-            <IconButton onClick={updateGroupName} disabled={isLoadingGroupName}>
-              <DoneIcon />
+            <IconButton sx={{color:'green'}} onClick={updateGroupName} disabled={isLoadingGroupName}>
+              <DoneIcon/>
             </IconButton>
+            <IconButton sx={{color:"red"}} onClick={()=>setIsEdit(false)}><Cancel/></IconButton>
           </>
         ) : (
           <>
-            <Typography variant="h4">{groupName}</Typography>
-            <IconButton
-              disabled={isLoadingGroupName}
-              onClick={() => setIsEdit(true)}
-            >
-              <EditIcon />
-            </IconButton>
+        
+            
+                <Typography sx={{
+                  transition: 'color 0.3s',
+                  '&:hover': {
+                    color: 'primary.main',}
+                }} variant="h4">{groupName}</Typography>
+              
+                <IconButton
+                disabled={isLoadingGroupName}
+                onClick={() => setIsEdit(true)}
+                >
+                <EditIcon fontSize="small" />
+                </IconButton>
+                
+          
           </>
         )}
       </Stack>
@@ -238,7 +252,7 @@ const Group2 = () => {
     
     const ButtonGroup = (
       <Stack
-        direction={{
+      direction={{
           xs: "column-reverse",
           sm: "row",
         }}
@@ -254,7 +268,7 @@ const Group2 = () => {
           color="error"
           startIcon={<DeleteIcon />}
           onClick={openConfirmDeleteHandler}
-        >
+          >
           Delete Group
         </Button>
         <Button
@@ -262,19 +276,24 @@ const Group2 = () => {
           variant="contained"
           startIcon={<AddIcon />}
           onClick={openAddMemberHandler}
-        >
+          >
           Add Member
         </Button>
       </Stack>
     );
-
+    
+    //! whole body starts here
     return isLoadingMygroups ? (
       <LayoutLoader />
     ) : (
+    
       <Grid container height={"100vh"}>
         <Grid
           item
           sx={{
+           
+            borderRight:'dashed lightgrey 1px',
+            height:'100%',
             display: {
               xs: "none",
               sm: "block",
@@ -286,6 +305,7 @@ const Group2 = () => {
         </Grid>
   
         <Grid
+          height={"100%"}
           item
           xs={12}
           sm={8}
@@ -296,29 +316,30 @@ const Group2 = () => {
             position: "relative",
             padding: "1rem 3rem",
           }}
-        >
+          >
           <Stack direction={"row"} justifyContent={"space-between"}>
             {IconBtns}
             <Typography 
+            fullwidth
             color={"black"}
-            fontSize={"2rem"}
             variant="h1"
-            fontWeight={"bold"}
+            
+            sx={{mt:"1.1rem",fontSize:{xs:"2rem",sm:"2.5rem",md:"3rem"},fontFamily:"Bebas Neue"}}
             > Manage Group</Typography>
           </Stack>
-          {groupName && (
-            <>
-              {GroupName}
+         
+          {groupName ? (
+            <Box  overflow={"auto"}>
+            {GroupName}
   
               <Typography
-                margin={"2rem"}
-                alignSelf={"flex-start"}
+                marginTop={"1.5rem"}
                 variant="body1"
                 fontSize={"1.2rem"}
-                
-                sx={{alignSelf:"center"}}
+                sx={{alignSelf:"start"}}
               >
-               All Members
+               All Members 
+               <Typography sx={{fontsize:"0.8rem",color:"grey",textAlign:"center",mt:"1rem"}}>Deselect members to remove them</Typography>
               </Typography>
   
               <Stack
@@ -328,10 +349,9 @@ const Group2 = () => {
                 padding={{
                   sm: "1rem",
                   xs: "0",
-                  md: "1rem 4rem",
+                  md: "1rem",
                 }}
-                spacing={"2rem"}
-                height={"50vh"}
+                height={"fit"}
                 overflow={"auto"}
               >
                 {/* Members */}
@@ -356,18 +376,31 @@ const Group2 = () => {
               </Stack>
   
               {ButtonGroup}
-            </>
-          )}
+              </Box>
+              
+          ) :  
+                <Box 
+                 sx={{
+                  width: '100%',
+                  height: '100%',
+                  backgroundImage: `url(${groupList})`,
+                  backgroundSize:"cover", 
+                  backgroundPosition: 'top', 
+                  backgroundRepeat: 'no-repeat',}}>
+                    <Typography sx={{color:"grey",textAlign:'center',mt:"2rem"}}>Select a Group to Make Changes</Typography>
+                </Box>
+                }
+              
         </Grid>
   
         {isAddMember && (
-          <Suspense fallback={<Backdrop open />}>
+          <Suspense fallback={<Backdrop open={true} />}>
             <AddMemberDialog chatId={chatId} />
           </Suspense>
         )}
   
         {confirmDeleteDialog && (
-          <Suspense fallback={<Backdrop open />}>
+          <Suspense fallback={<Backdrop open={true} />}>
             <ConfirmDeleteDialog
               open={confirmDeleteDialog}
               handleClose={closeConfirmDeleteHandler}
@@ -375,7 +408,7 @@ const Group2 = () => {
             />
           </Suspense>
         )}
-  
+  {/* drawer for small screens */}
         <Drawer
           sx={{
             display: {
@@ -387,36 +420,77 @@ const Group2 = () => {
           onClose={handleMobileClose}
         >
           <GroupsList
-            w={"50vw"}
+            w={"70vw"}
             myGroups={myGroups?.transformedGroups}
             chatId={chatId}
           />
         </Drawer>
       </Grid>
+
     );
   };
   
-  const GroupsList = ({ w = "100%", myGroups = [], chatId }) => (
-    
+
+
+
+  const GroupsList = ({ w = "100%", myGroups = [], chatId }) => {
+    return(
     <Stack
       width={w}
       sx={{
-        backgroundImage: "linear-gradient(rgb(255 225 209), rgb(249 159 159))",
+        bgcolor:"#E5E4E2",
         height: "100vh",
-        overflow: "auto",
+        overflow: "auto"
+        ,gap:'1rem'
       }}
-    >
-      {myGroups.length > 0 ? (
-        myGroups.map((group) => (
-          <GroupListItem group={group} chatId={chatId} key={group._id} />
-        ))
-      ) : (
-        <Typography textAlign={"center"} padding="1rem">
-          No groups
-        </Typography>
-      )}
-    </Stack>
-  );
+      >
+        <Box height={"fit"} 
+          sx={{textAlign:"center" ,
+                px:"1rem", 
+                mt:'1rem',
+                color:"#00a86b",
+                font:'menu',
+                fontFamily: "",
+                mb:'2.5rem'
+              }}
+        
+        >
+          <Typography sx={{ 
+            fontSize:'2rem',
+            fontWeight:'600'
+            ,fontFamily:"Belleza, sans-serif"
+            }}>
+            Your Groups </Typography></Box>
+        
+        <Divider sx={{width:'70%' ,alignSelf:"center"}}/>
+      
+        {myGroups.length > 0 ? (
+          myGroups.map((group) => (
+            <GroupListItem group={group} chatId={chatId} key={group._id} />
+          ))
+        ) : (<>
+          <Typography textAlign={"center"}
+            padding="1rem"
+            sx={{
+              fontSize:{xs:"1.2rem",md:"2rem"}
+              ,fontFamily:" sans-serif",
+              fontWeight:'bold',color:"grey"}}
+            
+            >
+            No groups Found <br></br> Make some groups
+          </Typography>
+          <Box  height={"100vh"} sx={{
+          backgroundSize: "cover", 
+          backgroundPosition: 'center', 
+          backgroundRepeat: 'no-repeat',
+          my:{xs:"5rem",md:"2rem"},
+            
+          backgroundImage:`url(${groupList})`}}>
+
+          </Box></>
+        )}
+    </Stack>)
+  };
   
   const GroupListItem = memo(({ group, chatId }) => {
     const { name, avatar, _id } = group;
@@ -425,13 +499,23 @@ const Group2 = () => {
       <LinkComponent
         to={`?group=${_id}`}
         onClick={(e) => {
+          handleClose();
           if (chatId === _id) e.preventDefault();
         }}
       >
-        <Stack direction={"row"} spacing={"1rem"} alignItems={"center"}>
+        <Stack direction={"row"} 
+          spacing={"1rem"} 
+          alignItems={"center"}
+          bgcolor={"white"}
+          pl={"2rem"}
+          pb={"1rem"}
+          >
           <AvatarCard avatar={avatar} />
-          <Typography>{name}</Typography>
+          <Typography
+            sx={{fontsize:"1rem",overflow:"hidden",textOverflow:"ellipsis"}}
+          >{name}</Typography>
         </Stack>
+        <Divider sx={{width:"70%",ml:"5rem"}}/>
       </LinkComponent>
     );
   });

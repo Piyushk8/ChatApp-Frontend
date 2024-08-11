@@ -12,13 +12,13 @@ const AvatarCard = ({avatar=[] , max=4}) => {
         <Box width={"5rem"} height={"3rem"}>
             {
                 avatar.map((i , index) => {
-                   return <Avatar src={i?.avatar?.url || i}
+                   return <Avatar src={i?.avatar?.url || i?.url||i}
                         key={Math.random()*1000}
                         alt={`Avatar${index}`}
                         style={{
-                            background:"red",
-                             width:"2rem",
-                             height:"2rem",
+                            background:"grey",
+                             width:{xs:"2rem",md:"3rem"},
+                             height:{xs:"2rem",md:"3rem"},
                              position:"absolute",
                              left:{
                                 xs:`${index+0.5}rem`

@@ -49,7 +49,7 @@ const ChatItem = ({
         marginBottom: '2px',
         // borderBottom: '1px solid',
         // borderBottomColor: 'lightgrey',
-        wordBreak: 'break-word',
+        // wordBreak: 'break-word',
         
       }}
       
@@ -57,7 +57,7 @@ const ChatItem = ({
         <AvatarCard avatar={avatar} />
 
         <Stack>
-          <Typography>{FriendName}</Typography>
+          <Typography sx={{overflow:"hidden",whiteSpace:'nowrap',textOverflow:"ellipsis"}}>{FriendName}</Typography>
           {newMessageAlert && (
             <Typography sx={{fontSize:"0.7rem",color:"gray"}}>{newMessageAlert.count} New Message</Typography>
           )}
@@ -65,22 +65,21 @@ const ChatItem = ({
         
         {isOnline && (
           <Box
-            sx={{
-              
-              width: "10px",
-              height: "10px",
-              borderRadius: "50%",
-              backgroundColor: "green",
-              position: "absolute",
-              top: "50%",
-              right: "1rem",
-              transform: "translateY(-50%)",
-              
-            }}
-           />
+          sx={{
+            width: "10px",
+            height: "10px",
+            borderRadius: "50%",
+            backgroundColor: "green",
+            position: "absolute",
+            top: "50%",
+            right: "1rem",
+            transform: "translateY(-50%)",
+            
+          }}
+          />
         )}
       </motion.div>
-      <Divider sx={{alignSelf:"end",width:"80%"}}/>
+        <Divider sx={{alignSelf:"end",width:"80%"}}/>
       </Stack>
     </LinkComponent>
   );

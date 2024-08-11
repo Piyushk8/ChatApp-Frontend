@@ -1,10 +1,13 @@
-import { Dialog, DialogTitle, Stack, Typography,ListItem,Avatar, Button } from '@mui/material'
+import { Dialog, DialogTitle, Stack, Typography,ListItem,Avatar, Button, Box } from '@mui/material'
 import React,{memo, useEffect, useState} from 'react'
 import { SampleData, SampleNotifications } from '../../constant/SampleData'
 import { useAcceptFriendRequestMutation, useGetNotificationsQuery } from "../../redux/api/api.js";
 import { useDispatch, useSelector } from 'react-redux';
 import { setIsNotification } from '../../redux/reducer/misc.js';
 import {toast} from "react-hot-toast"
+import NotifyImage from "../../assets/NotifyImage.webp"
+import AvatarCard from '../shared/AvatarCard.jsx';
+
 const NotificationsDialog = () => {
   const dispatch = useDispatch();
   //states
@@ -35,11 +38,16 @@ const NotificationsDialog = () => {
  
   return (
     <Dialog open={isNotification}  onClose={closeHandler}>
-      <Stack p={{xs:"1rem" , sm:"2rem"}} maxWidth={"25rem"}>
-      <DialogTitle>
+      <Stack p={{xs:"1rem" , sm:"2rem"}} 
+      direction={"column"}
+      alignItems={"center"}
+      maxWidth={"25rem"} sx={{Height:"50vh"}}>
+      <DialogTitle
+        sx={{textAlign:"center",fontFamily:"belleza",fontWeight:"600"}}
+      >
         Notifications
       </DialogTitle>
-          <Stack>
+          <Stack sx={{height:"100%"}}>
           {
             data?.requests.length > 0 ? (
             
@@ -50,8 +58,15 @@ const NotificationsDialog = () => {
             
             :
             
-            (<Typography textAlign={"center"}>0 Notifications
-            </Typography>)
+            (<Box sx={{
+              height:"30vh",
+              width:"50vh",
+              backgroundPosition:"center",
+              backgroundRepeat:"no-repeat",
+              backgroundSize:"cover",
+              backgroundImage:`url(${NotifyImage})`}}>
+              <Typography sx={{color:'grey',textAlign:"center"}}>No New Notifications</Typography>
+            </Box>)
           } 
           </Stack>
       </Stack>
@@ -62,7 +77,7 @@ const NotificationsDialog = () => {
   )
 }
 const NotificationItem = memo(({ sender, _id, handler }) => {
-  const { name, avatar } = sender;
+  const { name,avatar } = sender;
   return (
     <ListItem>
       <Stack
@@ -70,8 +85,9 @@ const NotificationItem = memo(({ sender, _id, handler }) => {
         alignItems={"center"}
         spacing={"1rem"}
         width={"100%"}
+        overflow={"auto"}
       >
-        <Avatar />
+        <Avatar src={avatar?.url}/>
 
         <Typography
           variant="body1"
@@ -85,7 +101,7 @@ const NotificationItem = memo(({ sender, _id, handler }) => {
             width: "100%",
           }}
         >
-          {`${name} sent you a friend request.`}
+          {`${name} `}
         </Typography>
 
         <Stack
