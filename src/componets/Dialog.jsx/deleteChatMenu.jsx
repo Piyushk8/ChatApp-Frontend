@@ -51,11 +51,11 @@ const DeleteChatMenu = ({dispatch , deleteOptionAnchor}) => {
                 color: "grey",
                 boxSizing: "border-box",
             }}
-            spacing={"0.5rem"}
+            spacing={"1rem"}
         >
             <Box
-            onClick={selectedDeleteChat.groupChat?LeaveGroup:Unfriend}
-            display={"flex"} alignItems={"center"} gap={"0.5rem"}>
+              onClick={selectedDeleteChat.groupChat?LeaveGroup:Unfriend}
+              display={"flex"} alignItems={"center"} gap={"0.5rem"}>
                 {selectedDeleteChat.groupChat ? (
                     <>
                         <ExitToApp  fontSize='extrasmall'/>

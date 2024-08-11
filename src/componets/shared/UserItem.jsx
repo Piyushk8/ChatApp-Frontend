@@ -4,7 +4,6 @@ import { Remove as RemoveIcon , Add as AddIcon } from '@mui/icons-material';
 import { transformImage } from '../../lib/features';
 const UserItem = ({ user, handler, handlerIsLoading, isAdded = false, styling = {} }) => {
     const { name, avatar, _id } = user;
-  console.log(avatar)
     return (
       <ListItem>
         <Stack

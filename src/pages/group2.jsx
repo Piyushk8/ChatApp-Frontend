@@ -157,7 +157,6 @@ const Group2 = () => {
         setMembers(groupData.chat.members);
       }
     
-      console.log(groupName)
       return () => {
         setGroupName("");
         setGroupNameUpdatedValue("");
@@ -479,15 +478,7 @@ const Group2 = () => {
             >
             No groups Found <br></br> Make some groups
           </Typography>
-          <Box  height={"100vh"} sx={{
-          backgroundSize: "cover", 
-          backgroundPosition: 'center', 
-          backgroundRepeat: 'no-repeat',
-          my:{xs:"5rem",md:"2rem"},
-            
-          backgroundImage:`url(${groupList})`}}>
-
-          </Box></>
+          </>
         )}
     </Stack>)
   };

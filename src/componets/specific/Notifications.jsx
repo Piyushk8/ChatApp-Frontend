@@ -1,4 +1,4 @@
-import { Dialog, DialogTitle, Stack, Typography,ListItem,Avatar, Button, Box } from '@mui/material'
+import { Dialog, DialogTitle, Stack, Typography,ListItem,Avatar, Button, Box, DialogContent, IconButton, Tooltip } from '@mui/material'
 import React,{memo, useEffect, useState} from 'react'
 import { SampleData, SampleNotifications } from '../../constant/SampleData'
 import { useAcceptFriendRequestMutation, useGetNotificationsQuery } from "../../redux/api/api.js";
@@ -7,6 +7,7 @@ import { setIsNotification } from '../../redux/reducer/misc.js';
 import {toast} from "react-hot-toast"
 import NotifyImage from "../../assets/NotifyImage.webp"
 import AvatarCard from '../shared/AvatarCard.jsx';
+import { Check, CheckBoxRounded, CheckBoxSharp, ClearSharp } from '@mui/icons-material';
 
 const NotificationsDialog = () => {
   const dispatch = useDispatch();
@@ -37,50 +38,62 @@ const NotificationsDialog = () => {
  
  
   return (
-    <Dialog open={isNotification}  onClose={closeHandler}>
-      <Stack p={{xs:"1rem" , sm:"2rem"}} 
-      direction={"column"}
-      alignItems={"center"}
-      maxWidth={"25rem"} sx={{Height:"50vh"}}>
-      <DialogTitle
-        sx={{textAlign:"center",fontFamily:"belleza",fontWeight:"600"}}
-      >
+    <Dialog open={isNotification}  onClose={closeHandler}
+    sx={{}}
+    fullWidth
+    maxWidth={"xs"}
+    >
+      
+        
+        <DialogTitle
+        sx={{textAlign:"center",
+          fontFamily:"belleza",
+          fontWeight:"600",
+          width:'100%',
+          color:""
+        }}
+        >
         Notifications
-      </DialogTitle>
-          <Stack sx={{height:"100%"}}>
+        </DialogTitle>
+
+        <DialogContent sx={{width:"100%"}}>
+        <Stack maxHeight={"45vh"} sx={{overflowY:"auto"}}>
           {
-            data?.requests.length > 0 ? (
-            
-              data?.requests?.map((i,index)=>{
-              return <NotificationItem sender={i.sender} _id={i._id} handler={FriendRequestHandler}/>
+            data?.requests.length > 0 ? 
+            (data?.requests?.map((i,index)=>{
+              return <NotificationItem 
+                sender={i.sender} 
+                _id={i._id} 
+                handler={FriendRequestHandler}/>
             })
-            ) 
-            
-            :
-            
-            (<Box sx={{
-              height:"30vh",
-              width:"50vh",
-              backgroundPosition:"center",
-              backgroundRepeat:"no-repeat",
-              backgroundSize:"cover",
-              backgroundImage:`url(${NotifyImage})`}}>
-              <Typography sx={{color:'grey',textAlign:"center"}}>No New Notifications</Typography>
-            </Box>)
-          } 
-          </Stack>
-      </Stack>
-
-
+     ) 
+    
+     :
+    
+     (<Box sx={{
+        height:"40vh",
+        maxHeight:'45vh',
+        overflowY:'auto',
+       width:"100%",
+       backgroundPosition:"center",
+       backgroundRepeat:"no-repeat",
+       backgroundSize:"cover",
+       backgroundImage:`url(${NotifyImage})`}}>
+       <Typography sx={{color:'grey',textAlign:"center"}}>No New Notifications</Typography>
+     </Box>)
+   } 
+   </Stack>
+        </DialogContent>
     </Dialog>
    
   )
 }
-const NotificationItem = memo(({ sender, _id, handler }) => {
+
+const NotificationItem = memo(({ sender, _id, handler}) => {
   const { name,avatar } = sender;
   return (
-    <ListItem>
-      <Stack
+    <ListItem key={_id}>
+      <Stack 
         direction={"row"}
         alignItems={"center"}
         spacing={"1rem"}
@@ -88,7 +101,7 @@ const NotificationItem = memo(({ sender, _id, handler }) => {
         overflow={"auto"}
       >
         <Avatar src={avatar?.url}/>
-
+        <Tooltip title={`${name}`}>
         <Typography
           variant="body1"
           sx={{
@@ -103,17 +116,28 @@ const NotificationItem = memo(({ sender, _id, handler }) => {
         >
           {`${name} `}
         </Typography>
+        </Tooltip>
 
         <Stack
           direction={{
-            xs: "column",
             sm: "row",
           }}
+          spacing={"0.5rem"}
         >
-          <Button onClick={() => handler({ _id, accept: true })}>Accept</Button>
-          <Button color="error" onClick={() => handler({ _id, accept: false })}>
+          <Button sx={{fontSize:"0.8rem",display:{xs:"none",sm:"block"},width:"1rem"}} onClick={() => handler({ _id, accept: true })}>Accept</Button>
+          <Button sx={{fontSize:"0.8rem",display:{xs:"none",sm:"block" ,width:"1rem"}}} color="error" onClick={() => handler({ _id, accept: false })}>
             Reject
           </Button>
+        </Stack>
+
+        <Stack direction={"row"}>
+        <IconButton sx={{color:"green", display:{sm:"none"}}}>
+          <CheckBoxSharp  />
+        </IconButton>
+          <IconButton sx={{color:"red", display:{sm:"none"}}}>
+          <ClearSharp/>
+          </IconButton>
+
         </Stack>
       </Stack>
     </ListItem>
