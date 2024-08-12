@@ -1,6 +1,7 @@
 import { Avatar, AvatarGroup, Stack ,Box} from '@mui/material'
 import React from 'react'
 import {transformImage} from "../../lib/features"
+import userAvatar from "../../assets/userAvatar.webp"
 const AvatarCard = ({avatar=[] , max=4}) => {
     
   return (
@@ -12,7 +13,7 @@ const AvatarCard = ({avatar=[] , max=4}) => {
         <Box width={"5rem"} height={"3rem"}>
             {
                 avatar.map((i , index) => {
-                   return <Avatar src={i?.avatar?.url || i?.url||i}
+                   return <Avatar src={i?.avatar?.url || i?.url||i || {userAvatar}}
                         key={Math.random()*1000}
                         alt={`Avatar${index}`}
                         style={{

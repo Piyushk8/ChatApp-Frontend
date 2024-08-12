@@ -57,7 +57,9 @@ const ChatItem = ({
         <AvatarCard avatar={avatar} />
 
         <Stack>
-          <Typography sx={{overflow:"hidden",whiteSpace:'nowrap',textOverflow:"ellipsis"}}>{FriendName}</Typography>
+          <Typography sx={{
+            fontFamily:'',
+            overflow:"hidden",whiteSpace:'nowrap',textOverflow:"ellipsis"}}>{FriendName}</Typography>
           {newMessageAlert && (
             <Typography sx={{fontSize:"0.7rem",color:"gray"}}>{newMessageAlert.count} New Message</Typography>
           )}

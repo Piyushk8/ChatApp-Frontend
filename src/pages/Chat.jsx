@@ -16,7 +16,6 @@ import { removeNewMessagesAlert } from '../redux/reducer/chat';
 import { TypingLoader } from '../componets/Loaders/Layoutloader';
 import { useNavigate } from 'react-router-dom';
 import chatBackground from "../assets/chatBackground.webp"
-import darkChatBackground from "../assets/darkChatBackground.webp"
 
 const Chat = ({chatId , user}) => {
   

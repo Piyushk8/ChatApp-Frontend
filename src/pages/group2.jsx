@@ -503,7 +503,9 @@ const Group2 = () => {
           >
           <AvatarCard avatar={avatar} />
           <Typography
-            sx={{fontsize:"1rem",overflow:"hidden",textOverflow:"ellipsis"}}
+            sx={{
+              fontFamily:'belleza',
+              fontsize:"1rem",overflow:"hidden",textOverflow:"ellipsis"}}
           >{name}</Typography>
         </Stack>
         <Divider sx={{width:"70%",ml:"5rem"}}/>

@@ -92,8 +92,11 @@ return (
         <Toolbar>
           <Typography
             onClick={()=>{nav('/')}}
-            variant='h6' sx={{display:{xs:"none" , sm:"block"}}}>
-            Chat App
+            variant='h6' sx={{
+              fontFamily:"belleza",
+              fontWeight:600,
+              display:{xs:"none" , sm:"block"}}}>
+            ChatterBox
           </Typography>
 
         <Box sx={{display:{xs:"block", sm:"none"}}}>

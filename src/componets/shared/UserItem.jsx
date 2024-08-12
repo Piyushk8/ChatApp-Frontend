@@ -15,7 +15,9 @@ const UserItem = ({ user, handler, handlerIsLoading, isAdded = false, styling = 
         >
           <Avatar src={transformImage(avatar?.url||avatar)} />
           <Typography
-            sx={{font:"menu", fontSize:"1rem",
+            sx={{
+              fontFamily:'belleza',
+              font:"menu", fontSize:"1rem",
               flexGrow: 1,
               display: '-webkit-box',
               WebkitLineClamp: 1,
