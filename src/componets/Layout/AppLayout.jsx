@@ -7,7 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Profile from '../specific/Profile';
 import { useMyChatsQuery } from '../../redux/api/api';
 import { useDispatch, useSelector } from 'react-redux';
-import { setIsDeleteMenu, setIsMobile, setSelectedDeleteChat } from '../../redux/reducer/misc';
+import { setChatIdContextMenu, setIsDeleteMenu, setIsMobile, setSelectedDeleteChat } from '../../redux/reducer/misc';
 import { getSocket } from '../../socket';
 import { CHAT_JOINED,CHAT_LEFT,NEW_MESSAGE, NEW_MESSAGE_ALERT, NEW_REQUEST, ONLINE_USER,REFETECH_CHATS } from '../../constant/events';
 import { useSocketEvents } from '../../hooks/hook';
@@ -25,7 +25,7 @@ const AppLayout = () => (WrappedComponent) => {
     const params = useParams();
     const chatId = params.chatId;
     const deleteOptionAnchor = useRef(null);
-
+    let ChatIdContextMenu;
       //to fetch chats using RTK QUERY
     const {isLoading , data,isError ,error, refetch} = useMyChatsQuery("")
     const {isMobile } = useSelector((state)=>state.misc)
@@ -37,7 +37,7 @@ const AppLayout = () => (WrappedComponent) => {
     const handleDeleteChat = (e ,_id , groupChat)=>{
       e.preventDefault()
       deleteOptionAnchor.current = e.currentTarget;
-      
+     dispatch(setChatIdContextMenu(_id))
       dispatch(setIsDeleteMenu(true))
       dispatch(setSelectedDeleteChat({chatId,_id,groupChat}))
     };
@@ -145,10 +145,6 @@ const AppLayout = () => (WrappedComponent) => {
           <WrappedComponent {...props} user={user}  chatId={chatId} />
           </Grid>
         
-          {/* <Grid item md={4} lg={3}
-           sx={{display:{xs:"none",md:"block"} , 
-           padding:"2rem"}}
-            bgcolor="#009688" height={"100%"} ><Profile user={user}/> </Grid> */}
         </Grid>
         </Box>
         

@@ -1,5 +1,6 @@
-import { useState,useEffect } from "react";
+import {useState, useRef, useCallback, useEffect } from "react";
 import toast from "react-hot-toast";
+
 
 const useAsyncMutation = (mutationHook) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -63,4 +64,87 @@ const useErrors = (errors = []) => {
 
 
 
-export {useAsyncMutation ,useSocketEvents,useErrors}
+
+ const useInfiniteScrollTop = (
+  containerRef,
+  totalPages,
+  page,
+  setPage,
+  newData,
+  shouldReverse = false
+) => {
+  const [data, setData] = useState([]);
+
+  const debounceTimer = useRef(null);
+
+  const handleScroll = useCallback(() => {
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+
+    debounceTimer.current = setTimeout(() => {
+      if (!containerRef.current) return;
+
+      const { scrollTop } = containerRef.current;
+      const scrolledToTop = scrollTop === 0;
+      console.log(scrollTop)
+      if (scrolledToTop) {
+        if (totalPages === page) return;
+        setPage((oldPage) => oldPage + 1);
+      }
+    }, 200);
+  }, [totalPages, page]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+
+    if (container) container.addEventListener('scroll', handleScroll);
+
+    return () => {
+      if (container) container.removeEventListener('scroll', handleScroll);
+    };
+  }, [handleScroll, data]);
+
+  useEffect(() => {
+    let prevScrollHeight = 0;
+    let prevScrollTop = 0;
+
+    if (containerRef.current) {
+      prevScrollHeight = containerRef.current.scrollHeight;
+      prevScrollTop = containerRef.current.scrollTop;
+    }
+    console.log("prevscrllheigth :",prevScrollHeight)
+    console.log("prevscrllTop :",prevScrollTop)
+    if (newData) {
+      setData((oldData) => {
+        const seen = new Set(oldData.map((i) => i._id));
+        
+        const newMessages = newData.filter((i) => !seen.has(i._id));
+
+        if (shouldReverse) {
+          const newDataArray = Array.isArray(newMessages)
+            ? [...newMessages]
+            : [newMessages];
+
+          return [...newDataArray.reverse(), ...oldData];
+        } else {
+          return [...newMessages, ...oldData];
+        }
+      });
+    }
+
+    requestAnimationFrame(() => {
+      if (containerRef.current) {
+        const newScrollTop =
+          prevScrollTop + containerRef.current.scrollHeight - prevScrollHeight;
+        containerRef.current.scrollTop = newScrollTop;
+      }
+    });
+  }, [newData]);
+
+  return { data, setData };
+};
+
+
+
+export {useAsyncMutation ,useSocketEvents,useErrors,useInfiniteScrollTop}

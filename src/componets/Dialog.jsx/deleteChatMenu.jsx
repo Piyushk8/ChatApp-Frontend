@@ -1,14 +1,16 @@
 import { Box, Menu, Stack, Typography } from '@mui/material'
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { setIsDeleteMenu } from '../../redux/reducer/misc'
+import { removeChatIdContextMenu, setIsDeleteMenu } from '../../redux/reducer/misc'
 import { Delete, DoneAllSharp, ExitToApp, PushPin } from '@mui/icons-material'
 import { useAsyncMutation } from '../../hooks/hook'
 import { useDeleteChatMutation, useLeaveGroupMutation } from '../../redux/api/api'
 import { useNavigate } from 'react-router-dom'
+import { removeNewMessagesAlert } from '../../redux/reducer/chat'
 
-const DeleteChatMenu = ({dispatch , deleteOptionAnchor}) => {
-    const {isDeleteMenu,selectedDeleteChat} = useSelector((state)=>state.misc)
+const DeleteChatMenu = ({chatId,dispatch , deleteOptionAnchor}) => {
+    const {isDeleteMenu,selectedDeleteChat,chatIdContextMenu} = useSelector((state)=>state.misc)
+    
     const nav = useNavigate()
     const [deleteChat,_,deleteChatData] = useAsyncMutation(useDeleteChatMutation)
     const [leaveGroup,__,LeaveGroupData] = useAsyncMutation(useLeaveGroupMutation)
@@ -17,7 +19,7 @@ const DeleteChatMenu = ({dispatch , deleteOptionAnchor}) => {
         dispatch(setIsDeleteMenu(false))
         deleteOptionAnchor.current=null
     }
-    
+
 
     const LeaveGroup = ()=>{
         closeHandler();
@@ -70,11 +72,15 @@ const DeleteChatMenu = ({dispatch , deleteOptionAnchor}) => {
             </Box>
             <Box display={"flex"} alignItems={"center"} gap={"0.5rem"}>
                 <PushPin fontSize='extrasmall' />
-                <Typography>Pin Chat</Typography>
+                <Typography sx={{textDecoration:"line-through"}}>Pin Chat</Typography>
             </Box>
             <Box display={"flex"} alignItems={"center"} gap={"0.5rem"}>
                 <DoneAllSharp fontSize='extrasmall'/>
-                <Typography>Mark as Read</Typography>
+                <Typography
+                onClick={()=>{dispatch(removeNewMessagesAlert(chatIdContextMenu))
+                    dispatch(removeChatIdContextMenu())
+                }}
+                >Mark as Read</Typography>
             </Box>
         </Stack>
     </Menu>

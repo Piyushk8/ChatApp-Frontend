@@ -145,7 +145,17 @@ const api = createApi({
             }),
             invalidatesTags:["chat"]
         }),
+        // renameUser:builder.mutation({
+        //     query:({newName})=>({
+        //         url:`user/rename`,
+        //         method:"put",
+        //         credentials:'include',
+        //         body:{newName}
+        //     }),
+        //     invalidatesTags:["user"]
+           
+        // })
     })
 })
 export default api
-export const  {useLeaveGroupMutation, useDeleteChatMutation,useAddGroupMemberMutation,useRemoveGroupMemberMutation,useRenameGroupMutation,useCreateNewGroupMutation,useGetMyGroupsQuery,useSendAttachmentsMutation,useAcceptFriendRequestMutation,useGetNotificationsQuery,useMyChatsQuery ,useSendFriendRequestMutation, useLazySearchUserQuery , useChatDetailsQuery,useGetMessagesQuery,useAvailableFriendsQuery} = api;
+export const  {useRenameUserMutation,useLeaveGroupMutation, useDeleteChatMutation,useAddGroupMemberMutation,useRemoveGroupMemberMutation,useRenameGroupMutation,useCreateNewGroupMutation,useGetMyGroupsQuery,useSendAttachmentsMutation,useAcceptFriendRequestMutation,useGetNotificationsQuery,useMyChatsQuery ,useSendFriendRequestMutation, useLazySearchUserQuery , useChatDetailsQuery,useGetMessagesQuery,useAvailableFriendsQuery} = api;

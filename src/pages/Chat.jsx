@@ -9,7 +9,7 @@ import { getSocket } from '../socket';
 import { ALERT, CHAT_JOINED, CHAT_LEFT, IS_TYPING, NEW_MESSAGE, STOP_TYPING } from '../constant/events';
 import { useChatDetailsQuery, useGetMessagesQuery } from '../redux/api/api';
 import {useErrors, useSocketEvents} from "../hooks/hook"
-import {useInfiniteScrollTop} from "6pp"
+import {useInfiniteScrollTop} from "../hooks/hook"
 import { useDispatch } from 'react-redux';
 import { setIsFileMenu } from '../redux/reducer/misc';
 import { removeNewMessagesAlert } from '../redux/reducer/chat';
@@ -34,7 +34,6 @@ const Chat = ({chatId , user}) => {
   const bottomRef = useRef(null)
 
   const socket = getSocket();
-  
   
   //chat queries
   const chatDetails = useChatDetailsQuery({chatId , skip:!chatId})
@@ -61,7 +60,7 @@ const Chat = ({chatId , user}) => {
     {isError:chatDetails.isError ,error:chatDetails.error}]
   
   useEffect(()=>{
-    socket.emit(CHAT_JOINED,{userId:user._id,members})
+   // socket.emit(CHAT_JOINED,{userId:user._id,members})
     dispatch(removeNewMessagesAlert(chatId))
   
     return()=>{
@@ -69,7 +68,7 @@ const Chat = ({chatId , user}) => {
       setMessage("");
       setOldMessages([]);
       setPage(1);
-      socket.emit(CHAT_LEFT,{userId:user._id,members})
+      // socket.emit(CHAT_LEFT,{userId:user._id,members})
     }
   },[chatId])
 

@@ -14,6 +14,8 @@ const initialState = {
     chatId: "",
     groupChat: false,
   },
+  chatIdContextMenu:null,
+  isEditName:false
 };
 
 const miscSlice = createSlice({
@@ -50,11 +52,20 @@ const miscSlice = createSlice({
     setIsProfile: (state, action) => {
       state.isProfile = action.payload;
     },
+    setChatIdContextMenu:(state,action)=>{
+      state.chatIdContextMenu = action.payload;
+    },removeChatIdContextMenu:(state)=>{
+        state.chatIdContextMenu=null
+    },setIsEditName:(state,action)=>{
+      state.isEditName=action.payload
+    }
+
   },
 });
 
 export default miscSlice;
 export const {
+  setIsEditName,
   setIsNewGroup,
   setIsAddMember,
   setIsNotification,
@@ -65,4 +76,6 @@ export const {
   setUploadingLoader,
   setSelectedDeleteChat,
   setIsProfile
+  ,setChatIdContextMenu
+  ,removeChatIdContextMenu
 } = miscSlice.actions;

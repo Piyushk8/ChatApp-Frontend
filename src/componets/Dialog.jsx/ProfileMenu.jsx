@@ -1,8 +1,8 @@
-import {  Typography,Divider,Avatar, IconButton, Drawer, Box, Stack, styled } from '@mui/material'
-import React from 'react'
+import {  Typography,Divider,Avatar, IconButton, Drawer, Box, Stack, styled, TextField } from '@mui/material'
+import React,{useState} from 'react'
 import { useSelector } from 'react-redux'
-import { setIsProfile } from '../../redux/reducer/misc'
-import { ArrowBack, Edit,  LogoutSharp, Settings } from '@mui/icons-material'
+import { setIsEditName, setIsProfile } from '../../redux/reducer/misc'
+import { ArrowBack, Check, Edit,  LogoutSharp, Settings } from '@mui/icons-material'
 import { transformImage } from '../../lib/features'
 import moment from 'moment'
 
@@ -20,13 +20,40 @@ padding: 12px 30px 2px;
 }`
 const ProfileMenu = ({isProfile,dispatch,profileAnchor,LogoutHandler}) => {
   const {user} = useSelector((state)=>state.auth)
+  const {isEditName} = useSelector((state)=>state.misc)
+  const [newName, setnewName] = useState("")
   const handleClose =()=>{
     dispatch(setIsProfile(false))
   }
   // const handleLogout=()=>{
 
   // }
+  const handleEditName = ()=>{
+    dispatch(setIsEditName(false))
+    console.log(newName
 
+    )
+  }
+
+
+  
+  const ProfileCard = ({ text, heading }) => {
+    return(
+        <BoxWrapper>
+           <Typography color={"green"} variant="body1">
+            {heading}
+          </Typography>
+          {text==="" ? 
+            <TextField sx={{color:'black'}} placeholder='Name..'
+            value={newName}
+            onChange={(e)=>setnewName(e.target.value)}
+            ></TextField>:
+          
+          <Typography variant="body1"color={"grey"}>{text}</Typography>}
+         
+          </BoxWrapper> 
+          )
+    };
 
   return (
     <Drawer
@@ -104,10 +131,23 @@ const ProfileMenu = ({isProfile,dispatch,profileAnchor,LogoutHandler}) => {
           justifyContent={"space-between"}
           alignItems="center"
         >
-          <ProfileCard heading={"Name"} text={user?.name} />
-          <IconButton>
-            <Edit fontSize='small' sx={{ color: "grey" }} />
+         {
+          isEditName ? <> 
+          <ProfileCard heading={"Name"} text={""}/>
+          <IconButton
+            sx={{}} 
+            onClick={handleEditName}
+          >
+          <Check/>
           </IconButton>
+          </> :
+          <>
+          <ProfileCard heading={"Name"} text={user?.name} />
+          <IconButton onClick={()=>dispatch(setIsEditName(true))}>
+            <Edit  fontSize='small' sx={{ color: "grey" }} />
+          </IconButton>
+          </>
+         }
         </Stack>
         
         <ProfileCard
@@ -169,17 +209,5 @@ const ProfileMenu = ({isProfile,dispatch,profileAnchor,LogoutHandler}) => {
   }
   
   
-  const ProfileCard = ({ text, heading }) => (
-  
-     
-  
-      <BoxWrapper>
-         <Typography color={"green"} variant="body1">
-          {heading}
-        </Typography>
-        <Typography variant="body1"color={"grey"}>{text}</Typography>
-        </BoxWrapper> 
-    
-);
 
 export default ProfileMenu
