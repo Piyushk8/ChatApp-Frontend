@@ -54,7 +54,35 @@ const ChatItem = ({
       }}
       
       >
-        <AvatarCard avatar={avatar} />
+          
+          {isOnline && (
+            <Box
+            sx={{
+              width: "10px",
+              height: "10px",
+              borderRadius: "50%",
+              backgroundColor: "green",
+              position: "absolute",
+              top: "1",
+              left: "1",
+              marginLeft:"3px",
+              zIndex:1,
+              transform: "translateY(-200%)",
+              animation: 'glow 1.5s forwards', // Apply the glow animation once
+              '@keyframes glow': {
+                '0%': {
+                  boxShadow: '0 0 0 0 rgba(0, 255, 0, 1)',
+                  //transform: 'scale(1)',
+                },
+                '100%': {
+                  boxShadow: '0 0 8px 8px rgba(0, 255, 0, 0)',
+                  //transform: 'scale(1.2)', // Slightly scale up for a glowing effect
+                },
+              },
+            }}
+            />
+          )}
+        <AvatarCard isOnline={isOnline} avatar={avatar} />
 
         <Stack>
           <Typography sx={{
@@ -64,22 +92,6 @@ const ChatItem = ({
             <Typography sx={{fontSize:"0.7rem",color:"gray"}}>{newMessageAlert.count} New Message</Typography>
           )}
         </Stack>
-        
-        {isOnline && (
-          <Box
-          sx={{
-            width: "10px",
-            height: "10px",
-            borderRadius: "50%",
-            backgroundColor: "green",
-            position: "absolute",
-            top: "50%",
-            right: "1rem",
-            transform: "translateY(-50%)",
-            
-          }}
-          />
-        )}
       </motion.div>
         <Divider sx={{alignSelf:"end",width:"80%"}}/>
       </Stack>

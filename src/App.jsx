@@ -5,7 +5,7 @@ import axios from "axios";
 import LayoutLoader from "./componets/Loaders/Layoutloader"
 import { server } from "./constant/config";
 import { useDispatch, useSelector } from "react-redux";
-import { userExists, userNotExists } from "./redux/reducer/auth";
+import { setIsAuthenticated, userExists, userNotExists } from "./redux/reducer/auth";
 import { Toaster } from "react-hot-toast";
 import { SocketProvider} from "./socket"
 import NotFound from "./pages/NotFound";
@@ -22,17 +22,16 @@ const App = () => {
   const { user, Loader } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    
-    axios
-      .get(`${server}/api/v1/user/me`, { withCredentials: true })
-      .then(({ data }) => dispatch(userExists(data.user)))
-
-      .catch((err) => dispatch(userNotExists())
-        );
-        
-  }, [dispatch]);
+  useEffect(()=>{
+    axios.get(`${server}/api/v1/user/me`,{
+      withCredentials:true
+    }).then((res)=>{
+      dispatch(setIsAuthenticated(true))
+      return dispatch(userExists(res.data.user))
+    }).catch((err)=>{
+      console.log(err)
+      dispatch(userNotExists())})
+  },[dispatch])
 
   return Loader ? (
     <LayoutLoader />

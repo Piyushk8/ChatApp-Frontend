@@ -39,12 +39,12 @@ const useAsyncMutation = (mutationHook) => {
 const useSocketEvents = (socket, handlers) => {
   useEffect(() => {
     Object.entries(handlers).forEach(([event, handler]) => {
-      socket.on(event, handler);
+      if(socket) socket.on(event, handler);
     });
 
     return () => {
       Object.entries(handlers).forEach(([event, handler]) => {
-        socket.off(event, handler);
+        if(socket) socket.off(event, handler);
       });
     };
   }, [socket, handlers]);
@@ -85,9 +85,9 @@ const useErrors = (errors = []) => {
     debounceTimer.current = setTimeout(() => {
       if (!containerRef.current) return;
 
-      const { scrollTop } = containerRef.current;
+      const { scrollTop ,scrollHeight,clientHeight} = containerRef.current;
       const scrolledToTop = scrollTop === 0;
-      console.log(scrollTop)
+     // console.log(scrollTop," ",scrollHeight," ",clientHeight)
       if (scrolledToTop) {
         if (totalPages === page) return;
         setPage((oldPage) => oldPage + 1);

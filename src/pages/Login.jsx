@@ -7,7 +7,7 @@ import { usernameValidator } from '../utils/Validators';
 import axios from 'axios';
 import { server } from '../constant/config';
 import { useDispatch , useSelector} from 'react-redux';
-import { userExists } from '../redux/reducer/auth';
+import { setIsAuthenticated, userExists } from '../redux/reducer/auth';
 import toast from 'react-hot-toast'
 import { Link, useNavigate } from 'react-router-dom'
 // import {z} from "zod";
@@ -32,6 +32,7 @@ const StyledTextField = styled(TextField)({
 function Login() {
   const dispatch = useDispatch();
   const nav = useNavigate("/")
+  const {isAuthenticated} = useSelector((state)=>state.auth)
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [typeOfPassword, settypeOfPassword] = useState("password")
@@ -56,7 +57,9 @@ function Login() {
           },
           config
         );
+        // if(data?.success === true){
         dispatch(userExists(data.user));
+        dispatch(setIsAuthenticated(true))
         toast.success(data.message, {
           id: toastId,
         });

@@ -125,13 +125,22 @@ return (
         title={"Notifications"}
         icon={<NotificationIcon/>}
         value={notificationCount?.Count}
-        onClick={OpenNotificationDialog}/>
+        onClick={OpenNotificationDialog}
+        sx={{
+          animation: 'glow 1.5s forwards', // Apply the glow animation once
+              '@keyframes glow': {
+                '0%': {
+                  boxShadow: '0 0 0 0 rgba(0, 255, 0, 1)',
+                  //transform: 'scale(1)',
+                },
+                '100%': {
+                  boxShadow: '0 0 8px 8px rgba(0, 255, 0, 0)',
+                  //transform: 'scale(1.2)', // Slightly scale up for a glowing effect
+                },
+              },
+        }}
+        />
         
-        {/* <Tooltip title="Logout">
-          <IconButton color='inherit' size='large' onClick={LogoutHandler}>
-            <Logout/>
-          </IconButton>
-        </Tooltip> */}
         <IconButton 
           ref={profileAnchor.current}
           onClick={OpenProfileDialog}>

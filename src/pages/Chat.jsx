@@ -33,7 +33,7 @@ const Chat = ({chatId , user}) => {
   const fileMenuRef = useRef(null)
   const bottomRef = useRef(null)
 
-  const socket = getSocket();
+  const {socket} = getSocket();
   
   //chat queries
   const chatDetails = useChatDetailsQuery({chatId , skip:!chatId})

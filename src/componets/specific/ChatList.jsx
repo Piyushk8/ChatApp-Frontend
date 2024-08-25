@@ -15,7 +15,8 @@ const ChatList = ({
   ],
   handleDeleteChat,
 }) => {
-  // console.log("online",onlineUsers)
+  
+   
   return (
     <Stack 
       sx={{ background:"#E5E4E2",
@@ -30,11 +31,11 @@ const ChatList = ({
         const newMessageAlert = newMessagesAlert.find(
           ({ chatId }) => chatId === _id
         );
-
-        const isOnline = members?.some((member) =>
-          onlineUsers.includes(member)
-        );
-        // console.log(isOnline)
+        //console.log(onlineUsers)
+        //members.map((i)=>console.log(typeof i._id))
+        const isOnline = members.some((i)=> onlineUsers.includes(i._id))
+        //const isOnline = onlineUsers.includes(members)
+      
 
         return (
           <ChatItem

@@ -9,7 +9,7 @@ import { useMyChatsQuery } from '../../redux/api/api';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChatIdContextMenu, setIsDeleteMenu, setIsMobile, setSelectedDeleteChat } from '../../redux/reducer/misc';
 import { getSocket } from '../../socket';
-import { CHAT_JOINED,CHAT_LEFT,NEW_MESSAGE, NEW_MESSAGE_ALERT, NEW_REQUEST, ONLINE_USER,REFETECH_CHATS } from '../../constant/events';
+import { NEW_MESSAGE, NEW_MESSAGE_ALERT, NEW_REQUEST,REFETECH_CHATS, USER_STATUS_CHANGE } from '../../constant/events';
 import { useSocketEvents } from '../../hooks/hook';
 import { incrementNotification, setNewMessagesAlert } from '../../redux/reducer/chat';
 import { getOrSaveFromStorage } from '../../lib/features';
@@ -20,7 +20,7 @@ const DeleteChatMenu = lazy(()=>import('../Dialog.jsx/deleteChatMenu'))
 const AppLayout = () => (WrappedComponent) => {
   return (props) =>{
     const nav = useNavigate();
-    const socket = getSocket();
+    const {socket} = getSocket();
     const dispatch = useDispatch()
     const params = useParams();
     const chatId = params.chatId;
@@ -64,15 +64,37 @@ const AppLayout = () => (WrappedComponent) => {
       refetch()
     },[refetch]) 
 
-    const onlineUsersHandler = useCallback((data)=>{
-     setonlineUsers(data)
+    const userStatusChangeHandler = useCallback(({ userId, status }) => {
+
+      if (userId) {
+          if (status === "online") {
+              setonlineUsers((prev) => {
+                  // Only add userId if it's not already in the array to avoid duplicates
+                  if (!prev?.includes(userId)) {
+                      return [...prev, userId];
+                  }
+                  return prev;
+              });
+          }
+          if (status === "offline") {
+              setonlineUsers((prev) => {
+                  // Filter out the userId from the array
+                  return prev.filter((i) => i !== userId);
+              });
+          }
+      }
+       }, [refetch]);
+  
+    const myOnlineFriendsListener = useCallback(({onlineMemberIds})=>{
+      setonlineUsers(onlineMemberIds[0]?.onlineMembers)
     },[refetch])
     
     const eventHandlers = {[NEW_MESSAGE_ALERT]:newMessageAlertHandler,
       [NEW_MESSAGE]:newMessagesHandler,
       [NEW_REQUEST]:newRequestHandler,
       [REFETECH_CHATS]:refetchChatHandler,
-      [ONLINE_USER]:onlineUsersHandler
+      [USER_STATUS_CHANGE]:userStatusChangeHandler,
+      "myOnlineFriends":myOnlineFriendsListener
     
     }
     useSocketEvents(socket,eventHandlers)
@@ -100,7 +122,6 @@ const AppLayout = () => (WrappedComponent) => {
              chats={data?.transformedChats} chatId={chatId} 
             newMessagesAlert={newMessagesAlert}
             onlineUsers={onlineUsers}
-            //onlineUsers={['66abe2726bf758fce1c6ae13', '66a8baa24f2fdd6a8bfa815e']}
             handleDeleteChat={handleDeleteChat}
             />
           </Drawer>
@@ -111,9 +132,9 @@ const AppLayout = () => (WrappedComponent) => {
            background: 'linear-gradient(45deg, #fdfbfb 0%, #ebedee 100%)',
           height:"calc(100vh - 5rem)",
           //backgroundImage: 'url(https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png)',  // Replace with your image URL
-          backgroundSize: 'cover',    // Cover the entire box
-          backgroundPosition: 'center',  // Center the image
-          backgroundRepeat: 'no-repeat',  // Prevent the image from repeating
+          backgroundSize: 'cover',    
+          backgroundPosition: 'center',  
+          backgroundRepeat: 'no-repeat',  
         }}
       >
         <Box bgcolor={"red"}> </Box>

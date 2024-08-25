@@ -3,7 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     user:null,
     isAdmin:false,
-    Loader:true
+    Loader:true,
+    isAuthenticated:true
 }
 
 const authSlice  = createSlice({
@@ -17,11 +18,13 @@ const authSlice  = createSlice({
         userNotExists:(state)=>{
             state.user=null,
             state.Loader=false
-        }
+        }, setIsAuthenticated:(state,action)=>{
+            state.isAuthenticated=action.payload
+        },
     }
 });
 
 
 
 export {authSlice};
-export const {userExists , userNotExists} = authSlice.actions;
+export const {userExists ,setIsAuthenticated, userNotExists} = authSlice.actions;

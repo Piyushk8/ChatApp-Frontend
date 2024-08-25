@@ -1,4 +1,4 @@
-import {  Typography,Divider,Avatar, IconButton, Drawer, Box, Stack, styled, TextField } from '@mui/material'
+import {  Typography,Divider,Avatar, IconButton, Drawer, Box, Stack, styled, TextField, Slide } from '@mui/material'
 import React,{useState} from 'react'
 import { useSelector } from 'react-redux'
 import { setIsEditName, setIsProfile } from '../../redux/reducer/misc'
@@ -66,15 +66,15 @@ const ProfileMenu = ({isProfile,dispatch,profileAnchor,LogoutHandler}) => {
         WebkitOverflowScrolling:"none",
         right: 5,
         top: 20,
-        height: "90vh", // Adjust height based on viewport height
-        width: { xs: "95%", sm:"85%", md: "35%", lg: "30%" },
+        height: "90vh",
+        width: { xs: "70%", sm:"65%", md: "35%", lg: "30%" },
         background: "lightgrey",
         borderRadius: "8px", 
         display: 'flex',  
         flexDirection: 'column',  
       },
     }}
-  >
+    >
     <Box
       sx={{
         display: "flex",
