@@ -9,6 +9,7 @@ import { setIsAuthenticated, userExists, userNotExists } from "./redux/reducer/a
 import { Toaster } from "react-hot-toast";
 import { SocketProvider} from "./socket"
 import NotFound from "./pages/NotFound";
+import { setPinnedChats, setPinnedChatsArray } from "./redux/reducer/chat";
 
 
 
@@ -27,6 +28,7 @@ const App = () => {
       withCredentials:true
     }).then((res)=>{
       dispatch(setIsAuthenticated(true))
+      dispatch(setPinnedChatsArray(res?.data?.user?.pinned))
       return dispatch(userExists(res.data.user))
     }).catch((err)=>{
       console.log(err)

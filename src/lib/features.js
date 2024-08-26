@@ -1,3 +1,5 @@
+import { format, isToday, isYesterday, differenceInDays } from 'date-fns';
+
 const fileFormat = (url)=>{
     const fileExtension = url.split(".").pop();
  
@@ -26,6 +28,22 @@ const getOrSaveFromStorage = ({ key, value, get }) => {
     else localStorage.setItem(key, JSON.stringify(value));
   };
   
+
+  export function formatDate(updatedAt) {
+    const date = new Date(updatedAt);
+
+    if (isToday(date)) {
+        // If the date is today, return the time in HH:mm a format (e.g., 02:30 PM)
+        return format(date, 'hh:mm a');
+    } else if (isYesterday(date)) {
+        // If the date is yesterday, return 'Yesterday'
+        return 'Yesterday';
+    } else {
+        // For older dates, return the number of days ago
+        const daysAgo = differenceInDays(new Date(), date);
+        return `${daysAgo} days ago`;
+    }
+}
 
 export {fileFormat,transformImage,getOrSaveFromStorage};
 

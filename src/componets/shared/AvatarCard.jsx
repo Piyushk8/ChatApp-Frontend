@@ -8,9 +8,10 @@ const AvatarCard = ({avatar=[] ,isOnline, max=4}) => {
    <Stack
     direction={"row"}
     spacing={0.5}
+    paddingLeft={"10px"}
    >
     <AvatarGroup position="relative" max={max}>
-        <Box width={"5rem"} height={"3rem"}>
+        <Box  height={"3rem"} sx={{width:{"md":"5rem","xs":"3rem"}}} >
             {
                 avatar.map((i , index) => {
                    return <Avatar src={i?.avatar?.url || i?.url||i || {userAvatar}}

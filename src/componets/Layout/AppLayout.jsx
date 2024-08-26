@@ -30,9 +30,10 @@ const AppLayout = () => (WrappedComponent) => {
     const {isLoading , data,isError ,error, refetch} = useMyChatsQuery("")
     const {isMobile } = useSelector((state)=>state.misc)
     const {user} = useSelector((state)=>state.auth)
-    const {newMessagesAlert} = useSelector((state)=>state.chat)
+    const {pinnedChats,newMessagesAlert} = useSelector((state)=>state.chat)
     const [onlineUsers, setonlineUsers] = useState([])
-    
+    const [sortedChats, setsortedChats] = useState([])
+    // console.log(pinnedChats)
     //All Handlers 
     const handleDeleteChat = (e ,_id , groupChat)=>{
       e.preventDefault()
@@ -61,30 +62,29 @@ const AppLayout = () => (WrappedComponent) => {
     },[refetch])
 
     const refetchChatHandler = useCallback(()=>{
+      console.log("refecth")
       refetch()
     },[refetch]) 
 
     const userStatusChangeHandler = useCallback(({ userId, status }) => {
-
       if (userId) {
           if (status === "online") {
               setonlineUsers((prev) => {
-                  // Only add userId if it's not already in the array to avoid duplicates
-                  if (!prev?.includes(userId)) {
-                      return [...prev, userId];
+                  const prevArray = Array.isArray(prev) ? prev : [];
+                  if (!prevArray.includes(userId)) {
+                      return [...prevArray, userId];
                   }
-                  return prev;
+                  return prevArray;
               });
           }
           if (status === "offline") {
               setonlineUsers((prev) => {
-                  // Filter out the userId from the array
-                  return prev.filter((i) => i !== userId);
+                  const prevArray = Array.isArray(prev) ? prev : [];
+                  return prevArray.filter((i) => i !== userId);
               });
           }
       }
-       }, [refetch]);
-  
+  }, [refetch]);
     const myOnlineFriendsListener = useCallback(({onlineMemberIds})=>{
       setonlineUsers(onlineMemberIds[0]?.onlineMembers)
     },[refetch])
@@ -102,13 +102,12 @@ const AppLayout = () => (WrappedComponent) => {
     useEffect(()=>{
       getOrSaveFromStorage({key:NEW_MESSAGE_ALERT,value:newMessagesAlert})      
     },[newMessagesAlert])
-
-  return (
+    return (
         <>
         <Title title='Chat App ' description='Hey!'></Title>
         <Header></Header>
 
-        <DeleteChatMenu  dispatch={dispatch} deleteOptionAnchor={deleteOptionAnchor}/>
+        <DeleteChatMenu  socket={socket} dispatch={dispatch} deleteOptionAnchor={deleteOptionAnchor}/>
 {/* this is chat list drawer for small screens */}
         {
           isLoading ?
@@ -118,6 +117,7 @@ const AppLayout = () => (WrappedComponent) => {
             open={isMobile}
             >
              <ChatList 
+             user={user}
              w="65vw"
              chats={data?.transformedChats} chatId={chatId} 
             newMessagesAlert={newMessagesAlert}
@@ -151,6 +151,7 @@ const AppLayout = () => (WrappedComponent) => {
            {
             isLoading ? <Skeleton></Skeleton> : 
             <ChatList 
+              user={user}
               chats={data?.transformedChats} 
               chatId={chatId} 
               newMessagesAlert={newMessagesAlert}

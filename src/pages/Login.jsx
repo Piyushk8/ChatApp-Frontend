@@ -225,15 +225,15 @@ function Login() {
                         fontSize:'11px',
                         fontWeight:'600',
                         color:'grey',
-                        width:"100%"
+                        width:"100%",
+                        
                       }}
                       >Users Name</StyledTypography>
                       <StyledTextField 
                         required
                         value={username.value}
                         onChange={username.changeHandler}
-                        placeholder='Jane@doe'
-                        label=""
+                        placeholder='Piyushk@12345'
                         variant='standard'
                         sx={{
                           
@@ -266,8 +266,7 @@ function Login() {
                         value={password.value}
                         onChange={password.changeHandler}
                         type={typeOfPassword} 
-                        placeholder='Abcd@123'
-                        title='password'
+                        placeholder='12345'
                         variant='standard'
                         sx={{ 
                           "& .MuiInput-underline:before": {
@@ -302,12 +301,16 @@ function Login() {
                   >Forgot Password?</StyledTypography>
 
                   <Button 
+                  tabIndex={0}
                     variant={"contained"}
                     onClick={handleLogin}
                     sx={{
                       alignSelf:"center",
                       bgcolor:'darkgreen',
                       "&:hover":{bgcolor:"green"},
+                      "&:focus": {
+                                    bgColor: "green",
+                                  },
                       width:"10rem", 
                       borderRadius:'1rem'
                     }}>
@@ -328,7 +331,7 @@ function Login() {
                       alignSelf:'center',
                       marginTop:'1rem',
                       fontSize:"0.8rem" 
-                    }}>New User? <StyledTypography sx={{cursor:'pointer',display:"inline",color:'green'}}>Sign up</StyledTypography></StyledTypography>
+                    }}>New User? <StyledTypography sx={{tabIndex:1, cursor:'pointer',display:"inline",color:'green'}}>Sign up</StyledTypography></StyledTypography>
             </Stack>
             
 //!Signup form     
@@ -570,10 +573,14 @@ function Login() {
                   >Forgot Password?</StyledTypography>
 
                   <Button 
+                  tabIndex={0}
                     variant={"contained"}
                     onClick={handleSignUp}
                     sx={{
                       "&:hover":{bgcolor:"green"},
+                      "&:focus": {
+                                    bgColor: "green",
+                                  },
                       alignSelf:"center",
                       bgcolor:'darkgreen',
                       width:"10rem", 

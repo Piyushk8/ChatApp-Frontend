@@ -8,9 +8,8 @@ const initialState = {
     key:NEW_REQUEST,get:true
   }) || {
     Count:0
-  }
-  
-  
+  },
+  pinnedChats:[]
   ,
   newMessagesAlert: getOrSaveFromStorage({
     key: NEW_MESSAGE_ALERT,
@@ -28,12 +27,18 @@ const chatSlice = createSlice({
   name: "chat",
   initialState,
   reducers: {
-    // incrementNotification: (state) => {
-    //   state.notificationCount += 1;
-    // },
-    // resetNotificationCount: (state) => {
-    //   state.notificationCount = 0;
-    // },
+    setPinnedChatsArray:(state,action)=>{
+      state.pinnedChats = action.payload
+    },
+   setPinnedChats:(state,action)=>{
+    if(!state.pinnedChats.includes(action.payload)) state.pinnedChats.push(action.payload)
+   },
+   deleteFromPinnedChats:(state,action)=>{
+    if(state.pinnedChats.includes(action.payload)) {
+     state.pinnedChats =  state.pinnedChats.filter((i)=>i!==action.payload)
+      
+    }}
+    ,
     incrementNotification: (state) => {
       state.notificationCount.Count += 1;
       getOrSaveFromStorage({
@@ -77,7 +82,9 @@ const chatSlice = createSlice({
 });
 
 export default chatSlice;
-export const {
+export const {setPinnedChatsArray,
+  deleteFromPinnedChats,
+  setPinnedChats,
   incrementNotification,
   resetNotificationCount,
   setNewMessagesAlert,

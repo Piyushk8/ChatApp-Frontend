@@ -6,7 +6,7 @@ import { InputBox} from '../componets/StyledComponent';
 import FileMenu from '../componets/Dialog.jsx/FileMenu';
 import MessageComponent from '../componets/shared/MessageComponent';
 import { getSocket } from '../socket';
-import { ALERT, CHAT_JOINED, CHAT_LEFT, IS_TYPING, NEW_MESSAGE, STOP_TYPING } from '../constant/events';
+import { ALERT, IS_TYPING, NEW_MESSAGE, STOP_TYPING } from '../constant/events';
 import { useChatDetailsQuery, useGetMessagesQuery } from '../redux/api/api';
 import {useErrors, useSocketEvents} from "../hooks/hook"
 import {useInfiniteScrollTop} from "../hooks/hook"

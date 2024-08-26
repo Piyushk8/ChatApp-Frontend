@@ -1,4 +1,4 @@
-import React, { memo ,useState} from "react";
+import React, { memo ,useEffect,useState} from "react";
 import { LinkComponent } from "../StyledComponent";
 import { Box, Divider, Stack, Typography } from "@mui/material";
 import AvatarCard from "./AvatarCard";
@@ -10,27 +10,32 @@ import {
   Face as FaceIcon,
   AlternateEmail as UserNameIcon,
   CalendarMonth as CalendarIcon,
+  PushPin,
+  PushPinRounded,
 } from "@mui/icons-material";
 import { Link } from "react-router-dom";
+import { setPinnedChats } from "../../redux/reducer/chat";
 const ChatItem = ({
   avatar = [],
+  lastSeen,
   name,
   _id,
   groupChat = false,
   sameSender,
   isOnline,
+  lastMessage,
   newMessageAlert,
   index = 0,
+  pinned,
   handleDeleteChat,
 }) => {
-
-  
   const { user }= useSelector((state)=>state.auth)
   const FriendName = name.split("-").filter((i)=> i!==user.name)
 
   return (
     <LinkComponent
       to={`/chats/${_id}`}
+      sx={{width:"100%"}}
       onContextMenu={(e) => handleDeleteChat(e, _id, groupChat)}
     >
       <Stack>
@@ -39,17 +44,22 @@ const ChatItem = ({
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.1 * index }}
       style={{
+        width:"100%",
         display: 'flex',
-        gap: '1rem',
         alignItems: 'center',
-        backgroundColor: sameSender ? '#054640' : 'unset',
-        color: sameSender ? 'white' : 'unset',
-        position: 'relative',
-        padding: '1rem',
+        transform:"scale(2)",
+       borderLeft:`7px solid ${sameSender? "darkgreen":"#E5E4E2"}`, 
+       borderRadius:"1rem",
+       color: sameSender ? '' : 'unset',
+        // position: 'relative',
+        paddingTop:"10px",
+        paddingBottom:"1rem",
+        paddingRight:"9px",
         marginBottom: '2px',
+        marginTop: '10px',
         // borderBottom: '1px solid',
         // borderBottomColor: 'lightgrey',
-        // wordBreak: 'break-word',
+        wordBreak: 'break-word',
         
       }}
       
@@ -65,7 +75,7 @@ const ChatItem = ({
               position: "absolute",
               top: "1",
               left: "1",
-              marginLeft:"3px",
+              marginLeft:"10px",
               zIndex:1,
               transform: "translateY(-200%)",
               animation: 'glow 1.5s forwards', // Apply the glow animation once
@@ -84,13 +94,35 @@ const ChatItem = ({
           )}
         <AvatarCard isOnline={isOnline} avatar={avatar} />
 
-        <Stack>
+        <Stack  width={"100%"} direction={"row"} display={"flex"} justifyContent={"space-between"}>
+          <Stack display={"flex"} justifyContent={"space-between"} maxWidth={"7.5rem"}>
           <Typography sx={{
+            flexShrink:1,
+            fontSize:{"md":"0.9rem","xs":"0.7rem"},
+            width:"7.5rem",
             fontFamily:'',
+            height:"1.1rem",
+            fontWeight:"bold",
             overflow:"hidden",whiteSpace:'nowrap',textOverflow:"ellipsis"}}>{FriendName}</Typography>
-          {newMessageAlert && (
-            <Typography sx={{fontSize:"0.7rem",color:"gray"}}>{newMessageAlert.count} New Message</Typography>
-          )}
+          <Typography flexShrink={1} sx={{color:"gray",fontSize:"15px",}} >{lastMessage}</Typography>
+          </Stack>
+          <Stack display={"flex"} flexShrink={5} flexDirection={"column"} justifyContent={"space-between"}>
+              <Box sx={{color:"gray" ,fontSize:{"md":"10px","xs":"9px"}}}>{lastSeen}</Box>
+            <Box sx={{height:{"md":"20px","xs":"15px"}}}>
+              {pinned &&
+              <PushPinRounded sx={{color:"GrayText",fontSize:"",transform:"rotate(30deg)"}}/>
+              }
+            </Box>
+            <Box marginTop={"10px"} maxHeight={"20px"} maxWidth={"20px"} > {
+              newMessageAlert 
+              && <Box  
+                  display={"flex"} 
+                  justifyContent={"center"} 
+                  alignItems={"center"} 
+                  sx={{fontSize:"10px", bgcolor:"gray" ,textAlign:"center",borderRadius:"100%",color:"white",width:"20px",height:"20px"}}>
+                    {newMessageAlert.count}</Box>
+              } </Box>
+          </Stack>
         </Stack>
       </motion.div>
         <Divider sx={{alignSelf:"end",width:"80%"}}/>

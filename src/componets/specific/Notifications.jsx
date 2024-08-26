@@ -131,10 +131,13 @@ const NotificationItem = memo(({ sender, _id, handler}) => {
         </Stack>
 
         <Stack direction={"row"}>
-        <IconButton sx={{color:"green", display:{sm:"none"}}}>
+        <IconButton onClick={() => handler({ _id, accept: true })} 
+            sx={{color:"green", display:{sm:"none"}}}>
           <CheckBoxSharp  />
-        </IconButton>
-          <IconButton sx={{color:"red", display:{sm:"none"}}}>
+        </IconButton >
+          <IconButton onClick={() => handler({ _id, accept: false })} 
+            sx={{color:"red", 
+            display:{sm:"none"}}}>
           <ClearSharp/>
           </IconButton>
 
