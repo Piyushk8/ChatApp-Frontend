@@ -31,6 +31,9 @@ const getOrSaveFromStorage = ({ key, value, get }) => {
 
   export function formatDate(updatedAt) {
     const date = new Date(Date.parse(updatedAt));
+    console.log(date)
+    console.log('updatedAt:', updatedAt);
+    console.log('Parsed date:', new Date(Date.parse(updatedAt)));
 
 
     if (isToday(date)) {
