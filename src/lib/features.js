@@ -30,7 +30,8 @@ const getOrSaveFromStorage = ({ key, value, get }) => {
   
 
   export function formatDate(updatedAt) {
-    const date = new Date(updatedAt);
+    const date = new Date(Date.parse(updatedAt));
+
 
     if (isToday(date)) {
         // If the date is today, return the time in HH:mm a format (e.g., 02:30 PM)

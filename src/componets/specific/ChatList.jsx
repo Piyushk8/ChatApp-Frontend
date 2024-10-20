@@ -23,7 +23,8 @@ const ChatList = ({
     if(chats){
       const pinchat = chats?.filter((i)=>pinnedChats.includes(i._id))
       const nonPinchat = chats?.filter((i)=>!pinnedChats.includes(i._id))
-    sortedChats = [...pinchat,...nonPinchat]
+      sortedChats = [...pinchat,...nonPinchat]
+
     }
 
 
@@ -38,8 +39,8 @@ const ChatList = ({
         const newMessageAlert = newMessagesAlert.find(
           ({ chatId }) => chatId === _id
         );
-        const pinned =  pinnedChats.includes(_id) ||false
-        const isOnline = members.some((i)=> onlineUsers.includes(i._id))
+        const pinned =  pinnedChats?.includes(_id) ||false
+        const isOnline = members?.some((i)=> onlineUsers.includes(i._id))
         const lastSeen = formatDate(updatedAt)
        
 
