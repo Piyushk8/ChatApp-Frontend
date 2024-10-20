@@ -1,18 +1,24 @@
-import { z } from "zod";
+// import { z } from "zod";
+// import { z } from 'zod';
 
-const usernameSchema = z.string();
+// const passwordSchema = z.string()
+//   .min(6, "Password must be at least 6 characters long")
+//   .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+//   .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+//   .regex(/[0-9]/, "Password must contain at least one number")
+//   .regex(/[^a-zA-Z0-9]/, "Password must contain at least one special character");
 
-export const usernameValidator = (username) => {
-  try {
-    usernameSchema.parse(username);
-    return { isValid: true, errorMessage: null };
-  } catch (e) {
-    
-    if (e instanceof z.ZodError) {
-      
-      return { isValid: false, errorMessage: e.errors[0].message };
-    }
-    
-    return { isValid: false, errorMessage: "Username validation failed" };
-  }
-};
+// // Example usage in signup schema
+// const signupSchema = z.object({
+//   name:z.string().min(1,"Name required!"),
+//   username: z.string().min(3, "Username must be at least 3 characters long"),
+//   password: passwordSchema,
+// });
+
+// export const loginSchema = z.object({
+//   username: z.string().min(3, "Username must be at least 3 characters long"),
+//   password: passwordSchema,
+// });
+
+
+

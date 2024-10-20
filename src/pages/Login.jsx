@@ -3,12 +3,13 @@ import {Button, Container, Paper, TextField, Typography, Stack, Avatar, IconButt
 import {CameraAlt as CameraAltIcon} from "@mui/icons-material"
 import { VisuallyHiddenInput } from '../componets/StyledComponent';
 import {useFileHandler, useInputValidation, useStrongPassword} from "6pp"
-import { usernameValidator } from '../utils/Validators';
+
 import axios from 'axios';
 import { server } from '../constant/config';
 import { useDispatch , useSelector} from 'react-redux';
 import { setIsAuthenticated, userExists } from '../redux/reducer/auth';
 import toast from 'react-hot-toast'
+import {useForm} from "react-hook-form"
 import { Link, useNavigate } from 'react-router-dom'
 // import {z} from "zod";
 
@@ -35,9 +36,33 @@ function Login() {
   const {isAuthenticated} = useSelector((state)=>state.auth)
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const {
+    register: registerLogin,
+    handleSubmit: handleSubmitLogin,
+    formState: { errors: loginErrors,isSubmitting:loginIsSubmitting }
+  } = useForm({
+    defaultValues: {
+      username: '',
+      password: ''
+    }
+  });
+
+  const {
+    register: registerSignup,
+    handleSubmit: handleSubmitSignup,
+    formState: { errors: signupErrors ,isSubmitting:signupIsSubmitting}
+  } = useForm({
+    defaultValues: {
+      name: '',
+      username: '',
+      bio: '',
+      password: '',
+    }
+  });
+
   const [typeOfPassword, settypeOfPassword] = useState("password")
-    const handleLogin = async(e)=>{
-      e.preventDefault()
+  const handleLogin = async(formData)=>{
+      
       const toastId = toast.loading("Logging In...");
 
       setIsLoading(true);
@@ -52,8 +77,8 @@ function Login() {
         const { data } = await axios.post(
           `${server}/api/v1/user/login`,
           {
-            username: username.value,
-            password: password.value,
+            username:formData?.username,
+            password:formData?.password,
           },
           config
         );
@@ -72,21 +97,30 @@ function Login() {
         setIsLoading(false);
       }
     };
-    const handleSignUp = (e)=>{
-        e.preventDefault();
+    const handleSignUp = (signupFormData)=>{
+        if(!avatar.file){
+          toast.error("Please add an Avatar")
+          return
+        }
         const formData = new FormData();
         formData.append("avatar", avatar.file);
-        formData.append("name", name.value);
-        formData.append("bio", bio.value);
-        formData.append("username", username.value);
-        formData.append("password", password.value);
+        formData.append("name",signupFormData.name);
+        formData.append("bio",signupFormData.bio);
+        formData.append("username",signupFormData.username);
+        formData.append("password",signupFormData.password);
 
+        
         axios.post(`${server}/api/v1/user/signup`, formData, {
           withCredentials: true,
           headers: {
             "Content-Type": "multipart/form-data" 
           }
-        }).then((res)=>toast.success(res.data.message))
+        }).then((res)=>{
+          toast.success(res.data.message)
+          dispatch(userExists(data.user));
+          dispatch(setIsAuthenticated(true))
+          nav("/")
+        })
           .catch((err)=>toast.error(err.response.data.message))
           }
 
@@ -95,10 +129,10 @@ function Login() {
   const toggleisLogin = ()=>{
     setIsLogin((prev)=>!prev)
   }
-  const name = useInputValidation();
-  const bio = useInputValidation("" ,);
-  const username = useInputValidation("", usernameValidator);
-  const password = useStrongPassword();
+  // const name = useInputValidation();
+  // const bio = useInputValidation("" ,);
+  // const username = useInputValidation("", usernameValidator);
+  // const password = useStrongPassword();
   const avatar = useFileHandler("single" )
 
   return (
@@ -217,6 +251,7 @@ function Login() {
                     
                       
                   >
+                  
                     <Box sx={{
                       marginTop:"1rem"
                       }}>
@@ -231,8 +266,12 @@ function Login() {
                       >Users Name</StyledTypography>
                       <StyledTextField 
                         required
-                        value={username.value}
-                        onChange={username.changeHandler}
+                        {
+                          ...registerLogin('username',{
+                            required:"Username required!"})
+                        }
+                        // value={username.value}
+                        // onChange={username.changeHandler}
                         placeholder='Piyushk@12345'
                         variant='standard'
                         sx={{
@@ -250,6 +289,8 @@ function Login() {
                           }}
                       />
                     </Box>
+                    <Box sx={{color:"red",
+                      fontSize:'0.6rem'}}>{loginErrors?.username?.message}</Box>
                     <Divider sx={{width:"100%"}}/>
                   
                   
@@ -263,8 +304,14 @@ function Login() {
                         >Password</StyledTypography>
                       <StyledTextField
                         required
-                        value={password.value}
-                        onChange={password.changeHandler}
+                        {
+                          ...registerLogin('password',{
+                            required:"Password Required!",
+                            minLength:{value:6,message:"Password Must be atleast 6 characters"}
+                          })
+                        }
+                        // value={password.value}
+                        // onChange={password.changeHandler}
                         type={typeOfPassword} 
                         placeholder='12345'
                         variant='standard'
@@ -283,9 +330,10 @@ function Login() {
                       >
 
                     </StyledTextField>
-                  </Box>
+                    </Box>
+                    <Box sx={{fontSize:"0.6rem",color:"red"}}>{loginErrors?.password?.message}</Box>
                   <Divider sx={{width:"100%"}}/>
-                  
+                
                   </Box>
 
 
@@ -301,9 +349,10 @@ function Login() {
                   >Forgot Password?</StyledTypography>
 
                   <Button 
-                  tabIndex={0}
+                    tabIndex={0}
+                    disabled={loginIsSubmitting}
                     variant={"contained"}
-                    onClick={handleLogin}
+                    onClick={handleSubmitLogin(handleLogin)}
                     sx={{
                       alignSelf:"center",
                       bgcolor:'darkgreen',
@@ -437,7 +486,10 @@ function Login() {
                       }}
                       >Name</StyledTypography>
                       <StyledTextField 
-                        required
+                        {
+                          ...registerSignup('name',{
+                            required:"name required!"})
+                        }
                         placeholder='Jane doe'
                         label=""
                         variant='standard'
@@ -456,12 +508,15 @@ function Login() {
                           }}
                       />
                     </Box>
+                    <Box sx={{color:"red",
+                      fontSize:'0.6rem'}}>{signupErrors?.name?.message}</Box>
+                    
                     <Divider sx={{width:"100%"}}/> <Box sx={{
                       marginTop:"1rem"
                       }}>
                       <StyledTypography
-                      value={username.value}
-                      onChange={username.changeHandler}
+                      // value={username.value}
+                      // onChange={username.changeHandler}
                       sx={{marginBottom:"5px",
                         fontSize:'11px',
                         fontWeight:'600',
@@ -470,7 +525,10 @@ function Login() {
                       }}
                       >Users Name</StyledTypography>
                       <StyledTextField
-                        required
+                         {
+                          ...registerSignup('username',{
+                            required:"Username required!"})
+                        }
                         placeholder='Jane@doe'
                         label=""
                         variant='standard'
@@ -489,6 +547,7 @@ function Login() {
                           }}
                       />
                     </Box>
+                    <Box sx={{color:"red",fontSize:"0.6rem"}}>{signupErrors?.username?.message}</Box>
                     <Divider sx={{width:"100%"}}/>
                     <Box sx={{
                       marginTop:"1rem"
@@ -503,8 +562,12 @@ function Login() {
                         >Bio</StyledTypography>
                       <StyledTextField 
                         required
-                        value={bio.value}
-                        onChange={bio.changeHandler}
+                        // value={bio.value}
+                        // onChange={bio.changeHandler}
+                        {
+                          ...registerSignup('bio',{
+                            required:"Bio required!"})
+                        }
                         placeholder='About you...'
                         label=""
                         variant='standard'
@@ -523,6 +586,8 @@ function Login() {
                           }}
                       />
                     </Box>
+                    <Box sx={{color:"red",fontSize:"0.6rem"}}>{signupErrors?.bio?.message}</Box>
+                    
                     <Divider sx={{width:"100%",marginBottom:'1rem'}}/>
                   
                     
@@ -534,9 +599,15 @@ function Login() {
                         }}
                         >Password</StyledTypography>
                       <StyledTextField
-                        required
-                        value={password.value}
-                        onChange={password.changeHandler}
+                        // required
+                        // value={password.value}
+                        // onChange={password.changeHandler}
+                        {
+                          ...registerSignup('password',{
+                            required:"password required!",
+                            minLength:{value:6,message:"Password Must be atleast 6 characters"}
+                          })
+                        }
                         type={typeOfPassword} 
                         placeholder='Abcd@123'
                         title='password'
@@ -555,7 +626,8 @@ function Login() {
                         }}
                       />
 
-                   
+                <Box sx={{color:"red",fontSize:"0.6rem"}}>{signupErrors?.password?.message}</Box>
+                    
                   
                   <Divider sx={{width:"100%"}}/>
                   
@@ -573,9 +645,10 @@ function Login() {
                   >Forgot Password?</StyledTypography>
 
                   <Button 
+                  disabled={signupIsSubmitting}
                   tabIndex={0}
                     variant={"contained"}
-                    onClick={handleSignUp}
+                    onClick={handleSubmitSignup(handleSignUp)}
                     sx={{
                       "&:hover":{bgcolor:"green"},
                       "&:focus": {
