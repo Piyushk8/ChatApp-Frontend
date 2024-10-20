@@ -43,7 +43,7 @@ const ChatList = ({
         const isOnline = members?.some((i)=> onlineUsers.includes(i._id))
         const lastSeen = formatDate(updatedAt)
        
-        console.log(lastSeen,isOnline,lastMessage)
+        console.log(chats,lastSeen,isOnline,lastMessage)
 
         return (
           <ChatItem
